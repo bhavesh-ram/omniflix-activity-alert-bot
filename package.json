@@ -1,0 +1,21 @@
+{
+  "name": "market_telegram_bot",
+  "version": "1.0.0",
+  "description": "this is Omniflix Marketplace Notification Bot",
+  "main": "nodemon index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.2.0",
+    "dotenv": "^16.0.3",
+    "mongoose": "^6.7.4",
+    "node-cron": "^3.0.2",
+    "request": "^2.88.2",
+    "telebot": "^1.4.1",
+    "telegraf": "^4.11.2"
+  }
+}
