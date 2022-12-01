@@ -3,28 +3,61 @@
 
 var cron = require('node-cron');
 const { userData } = require('../models/user.model');
+const dotenv = require('dotenv').config()
+const https = require('https')
+const { auctionData } = require("../models/auction.model");
 
-let notificationSend =  cron.schedule('* * * * * *', () => {
-
+let user_chatId =[]
+let notificationSend =  cron.schedule('* * * * * *', function() {
     userData.find({
         "isSubscribe":true
     },async (error,result) =>{
         if(error){
             return console.log(error)
         }else if(result && result.length){
+            user_chatId.splice(0,)
             result.forEach(user =>{
-                
+                user_chatId.push(user.userId)
             })
-        
         }else{
             return console.log("no User subscribed")
+        }
+    })
+    
+    auctionData.find({
+       "isNotified":false
+    },(error,result) =>{
+        if(error){
+            console.log(error)
+        }else if(result && result.length){
+            result.forEach(auction =>{
+                let msg = `new Auction Listed On MarketPlace.\nClick the below Link \n(https://omniflix.market/nft/${auction.nftId})\nThe Auction is Starting at:\n${new Date(auction.startTime)}\nAnd The Auction is Ending at:\n${new Date(auction.startTime)}`
+                user_chatId.forEach(chatid =>{
+                    let target =`https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=-837257700&text=${msg}&parse_mode=markdown`
+                    console.log(target)
+                    https.get(target, (res) => {
+                            console.log('notif telegram sent')
+                        })
+                })
+                // auctionData.findByIdAndUpdate({
+                //     "isNotified":false
+                // },{
+                //     $set:{
+                //         "isNotified":true 
+                //     }
+                // })
+            })
+        }else{
+            console.log("no Auction found")
         }
     })
     // const target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}`
     // https.get(target, (res) => {
     //     console.log('notif telegram sent')
     // })
+    // console.log(user_chatId)
 });
+
 
 module.exports ={
     notificationSend

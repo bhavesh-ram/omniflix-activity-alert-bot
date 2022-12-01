@@ -1,6 +1,30 @@
 # Marketplace_Telegram_Bot
 
-
+{
+  "_id": {
+    "$oid": "63866447eacf813b916794a7"
+  },
+  "userId": 927679695,
+  "username": "svAbhishek",
+  "groupId": "-837257700",
+  "isSubscribe": true,
+  "chatDate": {
+    "$date": {
+      "$numberLong": "1669751880000"
+    }
+  },
+  "createdAt": {
+    "$date": {
+      "$numberLong": "1669751879539"
+    }
+  },
+  "updatedAt": {
+    "$date": {
+      "$numberLong": "1669751879539"
+    }
+  },
+  "__v": 0
+}
 
 ## Getting started
 

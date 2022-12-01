@@ -1,15 +1,13 @@
 const { Telegraf } = require('telegraf');
 const dotenv = require('dotenv').config()
-
-
-
 const connectDB = require("./config/db");
+
 const { HelpMsg } = require('./src/template');
 const { subscribeCMD } = require('./src/subscribe');
 const { unSubscribeCMD } = require('./src/unsubscribe');
 // uncomment this to fetch data
 // const { auctionFetch } = require('./src/auctionDataFetching');
-// const { notificationSend } = require('./src/notification');
+const { notificationSend } = require('./src/notification');
 
 connectDB()
 
