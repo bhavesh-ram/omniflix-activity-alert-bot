@@ -9,10 +9,6 @@ var userSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    groupId: {
-        type: String,
-        required: true,
-    },
     isSubscribe: {
         type: Boolean,
         default: false,

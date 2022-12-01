@@ -7,58 +7,59 @@ const dotenv = require('dotenv').config()
 const https = require('https')
 const { auctionData } = require("../models/auction.model");
 
-let user_chatId =[]
-let notificationSend =  cron.schedule('* * * * * *', function() {
+let user_chatId = []
+let notificationSend = cron.schedule('1 * * * * *', function () {
     userData.find({
-        "isSubscribe":true
-    },async (error,result) =>{
-        if(error){
+        "isSubscribe": true
+    }, async (error, result) => {
+        if (error) {
             return console.log(error)
-        }else if(result && result.length){
+        } else if (result && result.length) {
             user_chatId.splice(0,)
-            result.forEach(user =>{
+            result.forEach(user => {
                 user_chatId.push(user.userId)
             })
-        }else{
+        } else {
             return console.log("no User subscribed")
         }
     })
-    
+
     auctionData.find({
-       "isNotified":false
-    },(error,result) =>{
-        if(error){
+        "isNotified": false
+    }, (error, result) => {
+        if (error) {
             console.log(error)
-        }else if(result && result.length){
-            result.forEach(auction =>{
-                let msg = `new Auction Listed On MarketPlace.\nClick the below Link \n(https://omniflix.market/nft/${auction.nftId})\nThe Auction is Starting at:\n${new Date(auction.startTime)}\nAnd The Auction is Ending at:\n${new Date(auction.startTime)}`
-                user_chatId.forEach(chatid =>{
-                    let target =`https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=-837257700&text=${msg}&parse_mode=markdown`
-                    console.log(target)
+        } else if (result && result.length) {
+            result.forEach(auction => {
+                let msg = `new Auction Listed On MarketPlace.\nClick the below Link \n(https://omniflix.market/nft/${auction.nftId})\nThe Auction is Starting at:\n${new Date(auction.startTime)}\nAnd The Auction is Ending at:\n${new Date(auction.endTime)}`
+                user_chatId.forEach(chatid => {
+                    let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
+                    // console.log(target)
                     https.get(target, (res) => {
-                            console.log('notif telegram sent')
-                        })
+                        console.log('notif telegram sent')
+                    })
+                    // console.log(auction.nftId)
+                    auctionData.findOneAndUpdate({
+                        "nftId": auction.nftId
+                    }, {
+                        $set: {
+                            "isNotified": true
+                        }
+                    },async(error) =>{
+                        if(error){
+                            console.log(error)
+                        }
+                    })
                 })
-                // auctionData.findByIdAndUpdate({
-                //     "isNotified":false
-                // },{
-                //     $set:{
-                //         "isNotified":true 
-                //     }
-                // })
             })
-        }else{
+        } else {
             console.log("no Auction found")
         }
     })
-    // const target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}`
-    // https.get(target, (res) => {
-    //     console.log('notif telegram sent')
-    // })
-    // console.log(user_chatId)
+    
 });
 
 
-module.exports ={
+module.exports = {
     notificationSend
 }

@@ -7,7 +7,6 @@ let subscribeCMD = async (ctx) => {
     let doc = {
         userId: data.from.id,
         username: data.from.username,
-        groupId: data.chat.id,
         isSubscribe: true,
         chatDate: new Date(data.date*1000)
     }

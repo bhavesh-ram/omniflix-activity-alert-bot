@@ -2,11 +2,11 @@ const { Telegraf } = require('telegraf');
 const dotenv = require('dotenv').config()
 const connectDB = require("./config/db");
 
-const { HelpMsg } = require('./src/template');
+const { HelpMsg, joinBot } = require('./src/template');
 const { subscribeCMD } = require('./src/subscribe');
 const { unSubscribeCMD } = require('./src/unsubscribe');
 // uncomment this to fetch data
-// const { auctionFetch } = require('./src/auctionDataFetching');
+const { auctionFetch } = require('./src/auctionDataFetching');
 const { notificationSend } = require('./src/notification');
 
 connectDB()
@@ -14,8 +14,13 @@ connectDB()
 
 const bot = new Telegraf(process.env.token);
 // bot.start();
+bot.command('join',async (ctx) =>{
+    console.time(`Processing update ${ctx.update.message.update_id}`);
+   await ctx.reply(joinBot) 
+   console.timeEnd(`Processing update ${ctx.update.message.update_id}`);
+})
 bot.command('help',async (ctx) =>{
-    console.log(ctx)
+    // console.log(ctx)
     console.time(`Processing update ${ctx.update.message.update_id}`);
    await ctx.reply(HelpMsg) 
    console.timeEnd(`Processing update ${ctx.update.message.update_id}`);
