@@ -7,7 +7,7 @@ let url = "https://data-api.omniflix.studio/auctions?verified=true&ipInfringemen
 let options = { json: true };
 
 
-let auctionFetch = cron.schedule('* 1 * * * *', () => {
+let auctionFetch = cron.schedule('4 * * * * *', () => {
     request(url, options, async (error, res, body) => {
        
         if (error) {

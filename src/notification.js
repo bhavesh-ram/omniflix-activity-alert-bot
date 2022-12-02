@@ -8,7 +8,7 @@ const https = require('https')
 const { auctionData } = require("../models/auction.model");
 
 let user_chatId = []
-let notificationSend = cron.schedule('1 * * * * *', function () {
+let notificationSend = cron.schedule('* * * * * *', function () {
     userData.find({
         "isSubscribe": true
     }, async (error, result) => {
@@ -26,7 +26,7 @@ let notificationSend = cron.schedule('1 * * * * *', function () {
 
     auctionData.find({
         "isNotified": false
-    }, (error, result) => {
+    },(error, result) => {
         if (error) {
             console.log(error)
         } else if (result && result.length) {
@@ -40,10 +40,11 @@ let notificationSend = cron.schedule('1 * * * * *', function () {
                     })
                     // console.log(auction.nftId)
                     auctionData.findOneAndUpdate({
-                        "nftId": auction.nftId
-                    }, {
-                        $set: {
-                            "isNotified": true
+                        "nftId":auction.nftId,
+                        "auctionId":auction.auctionId
+                    },{
+                        $set:{
+                            "isNotified": true,
                         }
                     },async(error) =>{
                         if(error){
