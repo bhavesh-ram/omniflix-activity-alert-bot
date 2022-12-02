@@ -13,14 +13,12 @@ connectDB()
 
 
 const bot = new Telegraf(process.env.token);
-// bot.start();
 bot.command('join',async (ctx) =>{
     console.time(`Processing update ${ctx.update.message.update_id}`);
    await ctx.reply(joinBot) 
    console.timeEnd(`Processing update ${ctx.update.message.update_id}`);
 })
 bot.command('help',async (ctx) =>{
-    // console.log(ctx)
     console.time(`Processing update ${ctx.update.message.update_id}`);
    await ctx.reply(HelpMsg) 
    console.timeEnd(`Processing update ${ctx.update.message.update_id}`);
