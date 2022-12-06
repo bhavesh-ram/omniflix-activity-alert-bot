@@ -9,6 +9,9 @@ var userSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    omniflixAddress: {
+        type: String,
+    },
     isSubscribe: {
         type: Boolean,
         default: false,
