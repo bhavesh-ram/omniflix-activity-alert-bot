@@ -7,12 +7,14 @@ const { subscribeCMD } = require('./src/subscribe');
 const { unSubscribeCMD } = require('./src/unsubscribe');
 // uncomment this to fetch data
 const { listingsFetch } = require('./src/listDataFetching');
-const { auctionFetch } = require('./src/dataFetching');
+// const { auctionFetch } = require('./src/dataFetching');
 // const { bidsFetch } = require('./src/dataFetching');
+const { mainSchedulerData } = require('./src/mainJobScheduler');
 const { activityFetch } = require('./src/activityFetching');
 
-const { auctionNotificationSend } = require('./src/notification');
+// const { auctionNotificationSend } = require('./src/notification');
 const { notificationSendList } = require('./src/notificationListing');
+
 
 
 connectDB()
