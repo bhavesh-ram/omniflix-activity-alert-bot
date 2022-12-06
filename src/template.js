@@ -2,7 +2,7 @@
 let HelpMsg = 
   `
     HERE ARE THE AVAILABLE COMMANDS AND THEIR UTILITY
-	1. /subscribe - subscribe to OmniFlix network Auction updates
+	1. /subscribe - subscribe to OmniFlix network Auction updates and add omniflix address after subscribe \ne.g:(/subscribe omniflix1rtwjj6qfn62emyghhgfhhtjedv3kgd9j20tx)
 	2. /unsubscribe - unsubscribe updates
   3. /join - join bot and subscribe to get personal updates of auction`
 	// 3. /about - about bot`

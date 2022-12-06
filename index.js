@@ -6,8 +6,14 @@ const { HelpMsg, joinBot } = require('./src/template');
 const { subscribeCMD } = require('./src/subscribe');
 const { unSubscribeCMD } = require('./src/unsubscribe');
 // uncomment this to fetch data
-const { auctionFetch } = require('./src/auctionDataFetching');
-const { notificationSend } = require('./src/notification');
+const { listingsFetch } = require('./src/listDataFetching');
+const { auctionFetch } = require('./src/dataFetching');
+// const { bidsFetch } = require('./src/dataFetching');
+const { activityFetch } = require('./src/activityFetching');
+
+const { auctionNotificationSend } = require('./src/notification');
+const { notificationSendList } = require('./src/notificationListing');
+
 
 connectDB()
 
