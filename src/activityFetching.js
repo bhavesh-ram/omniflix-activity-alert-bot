@@ -6,19 +6,17 @@ const { ActivityData } = require("../models/activity.model");
 
 let activityFetching = async () => {
     await ActivityData.find({
-
     }, {}, {
         sort: {
             created_at: 'desc'
         },
-        limit: 1
+        limit: 10
     }, async (error, result) => {
         if (error) {
             console.log(error)
         } else if (result) {
-            
-            
-            let url = `https://activity-api.omniflix.studio/activity?createdFrom=${new Date(result[0].created_at).toUTCString()}&sortBy=created_at&order=asc&limit=5`
+        
+            let url = `${process.env.ACTIVITY_URL}/activity?createdFrom=${new Date(result[0].created_at).toUTCString()}&sortBy=created_at&order=asc&limit=100`
             
             let options = { json: true };
             request(url, options, async (error, res, body) => {
@@ -33,7 +31,6 @@ let activityFetching = async () => {
                         ActivityData.findOne({
                             "_id":activity._id
                         }, async (error, result) => {
-                            // console.log(error,result)
                             if (error) {
                                 console.log(error)
                             } else if (result) {
@@ -42,7 +39,7 @@ let activityFetching = async () => {
                                 // await ActivityData.insertOne(activity)
                                 activity.isNotified=false
                                 let activityd = new ActivityData(activity)
-                                console.log(activityd)
+                                // console.log(activityd)
                                 activityd.save()
 
                             }
@@ -57,7 +54,9 @@ let activityFetching = async () => {
 }
 
 
-let activityFetch = cron.schedule('*/10 * * * * *', activityFetching)
+let activityFetch = cron.schedule('*/20 * * * * *', activityFetching)
+
+activityFetch.start()
 
 
 module.exports = {
