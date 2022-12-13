@@ -3,7 +3,11 @@ const https = require('https')
 
 const { userData } = require('../models/user.model');
 const { ActivityData } = require("../models/activity.model");
+const {buyNftHelperMsg,burnNftHelperMsg,mintONFTHelperMsg} = require("../src/template.js")
 
+String.prototype.fmt = function (hash) {
+    var string = this, key; for (key in hash) string = string.replace(new RegExp('\\{' + key + '\\}', 'gm'), hash[key]); return string
+}
 
 
 let buyNftHelper = async (activity) => {
@@ -47,11 +51,13 @@ let buyNftHelper = async (activity) => {
     // console.log(user_omniflixAddressOwner,user_chatIdOwner,user_omniflixAddressBuyer,user_chatIdBuyer)
     if(user_omniflixAddressOwner !=undefined && user_chatIdOwner != undefined){
 
-        let msg = ` ***Nft Sold***: (https://omniflix.market/nft/${activity.nft_id.id})`
+        // let msg = ` ***Nft Sold***: (https://omniflix.market/nft/${activity.nft_id.id})`
+        let msg = buyNftHelperMsg.NftOwnerMsg.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id})
         let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
         https.get(target, (res) => {
             return console.log('Buy-Nft Owner Telegram Notification sent')
         })
+        
         ActivityData.findOneAndUpdate({
             "_id":activity._id
         }, {
@@ -66,7 +72,8 @@ let buyNftHelper = async (activity) => {
     }
 
     if(user_chatIdBuyer != undefined && user_omniflixAddressBuyer != undefined){
-        let msg = ` ***You Bought New NFT*** (https://omniflix.market/nft/${activity.nft_id.id})`
+        // let msg = ` ***You Bought New NFT*** (https://omniflix.market/nft/${activity.nft_id.id})`
+        let msg = buyNftHelperMsg.NftBuyerMsg.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id})
         let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdBuyer}&text=${msg}&parse_mode=markdown`
         https.get(target, (res) => {
             return console.log('Buy-Nft Buyer Telegram Notification sent')
@@ -106,8 +113,9 @@ let burnNftHelper = async (activity) => {
     }).clone()
 
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
-        let msg = ` *** You Delisting Following Nft From MarketPlace.***
-        (https://omniflix.market/nft/${activity.id})`
+        // let msg = ` *** You Delisting Following Nft From MarketPlace.***
+        // (https://omniflix.market/nft/${activity.id})`
+        let msg = burnNftHelperMsg.fmt({ ACTIVITYID:activity.id})
 
         let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
         console.log("target", target)
@@ -159,7 +167,8 @@ let mintONFTHelper = async (activity)=>{
 
         if(creatorData.length){
             creatorData.forEach((data)=>{
-                let msg = `You have minted a new nft, to check %0AClick the below Link %0A(https://omniflix.market/nft/${nftId})`;
+                // let msg = `You have minted a new nft, to check %0AClick the below Link %0A(https://omniflix.market/nft/${nftId})`;
+                let msg = mintONFTHelperMsg.creatorMsg.fmt({ NFTID:nftId})
                 let userId = data.userId;
                 let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${userId}&text=${msg}&parse_mode=markdown`
                 https.get(target,(res)=>{
@@ -172,7 +181,8 @@ let mintONFTHelper = async (activity)=>{
 
         if(ownerData.length){
             ownerData.forEach((data)=>{
-                let msg = `A new NFT was minted in you account, to check %0AClick the below Link %0A(https://omniflix.market/nft/${nftId})`;
+                // let msg = `A new NFT was minted in you account, to check %0AClick the below Link %0A(https://omniflix.market/nft/${nftId})`;
+                let msg = mintONFTHelperMsg.ownerMsg.fmt({ NFTID:nftId})
                 let userId = data.userId;
                 let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${userId}&text=${msg}&parse_mode=markdown`
                 https.get(target,(res)=>{

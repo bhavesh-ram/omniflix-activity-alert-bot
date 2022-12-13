@@ -15,7 +15,6 @@ const { activityFetch } = require('./src/activityFetching');
 
 connectDB()
 
-
 const bot = new Telegraf(process.env.token);
 bot.command('join',async (ctx) =>{
     console.time(`Processing update ${ctx.update.message.update_id}`);
