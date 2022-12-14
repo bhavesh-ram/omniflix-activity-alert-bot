@@ -3,6 +3,11 @@ const https = require('https')
 
 const { userData } = require('../models/user.model');
 const { ActivityData } = require("../models/activity.model");
+const {listingHelperMsg,delistingHelperMsg} = require("../src/template.js")
+
+String.prototype.fmt = function (hash) {
+    var string = this, key; for (key in hash) string = string.replace(new RegExp('\\{' + key + '\\}', 'gm'), hash[key]); return string
+}
 
 let listingHelper = async (activity) => {
     let user_chatId = []
@@ -20,17 +25,23 @@ let listingHelper = async (activity) => {
             return console.log("no User subscribed")
         }
     }).clone()
-    console.log(user_chatId)
-    let msg = ` ***New Listing On MarketPlace.***
-        **Click the below Link**
-        (https://omniflix.market/nft/${activity.nft_id.id})`
+    // console.log(user_chatId)
+    // let msg = ` ***New Listing On MarketPlace.***
+    //     **Click the below Link**
+    //     (https://omniflix.market/nft/${activity.nft_id.id})`
+        let msg = listingHelperMsg.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id});
     user_chatId.forEach((chatid) => {
-        let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-        console.log("target", target)
-        https.get(target, (res) => {
-            return console.log('New Listing Telegram Notification sent')
-        })
+        setTimeout(function () {
+            let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
+            // console.log("target", target)
+            https.get(target, (res) => {
+                return console.log('New Listing Telegram Notification sent')
+            })
+            // sleep(100)
+
+        },500)
     })
+
     ActivityData.findOneAndUpdate({
         "_id": activity._id
     }, {
@@ -66,8 +77,9 @@ let deListingHelper = async (activity) => {
     }).clone()
 
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
-        let msg = ` *** You Delisting Following Nft From MarketPlace.***
-        (https://omniflix.market/nft/${activity.nft_id.id})`
+        // let msg = ` *** You Delisting Following Nft From MarketPlace.***
+        // (https://omniflix.market/nft/${activity.nft_id.id})`
+        let msg = delistingHelperMsg.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id})
 
         let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
         console.log("target", target)

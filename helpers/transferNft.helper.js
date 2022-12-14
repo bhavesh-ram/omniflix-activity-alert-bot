@@ -3,7 +3,11 @@ const https = require('https')
 
 const { userData } = require('../models/user.model');
 const { ActivityData } = require("../models/activity.model");
+const {transferNftHelperMsg} = require("../src/template.js")
 
+String.prototype.fmt = function (hash) {
+    var string = this, key; for (key in hash) string = string.replace(new RegExp('\\{' + key + '\\}', 'gm'), hash[key]); return string
+}
 
 
 let transferNftHelper = async (activity) => {
@@ -44,8 +48,9 @@ let transferNftHelper = async (activity) => {
 
 
     if(user_omniflixAddressSender !=undefined && user_chatIdSender != undefined){
-        let msg = ` ***You Transferred Nft.*** 
-        (https://omniflix.market/nft/${activity.id})`
+        // let msg = ` ***You Transferred Nft.*** 
+        // (https://omniflix.market/nft/${activity.id})`
+        let msg = transferNftHelperMsg.senderMsg.fmt({ ACTIVITYID:activity.id})
         let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdSender}&text=${msg}&parse_mode=markdown`
         https.get(target, (res) => {
             return console.log('Transferred Nft Telegram Notification sent')
@@ -64,8 +69,9 @@ let transferNftHelper = async (activity) => {
     }
 
     if(user_chatIdRecipient != undefined && user_omniflixAddressRecipient != undefined){
-        let msg = ` ***You Receved New NFT In your Account*** 
-        (https://omniflix.market/nft/${activity.id})`
+        // let msg = ` ***You Receved New NFT In your Account*** 
+        // (https://omniflix.market/nft/${activity.id})`
+        let msg = transferNftHelperMsg.receiverMsg.fmt({ ACTIVITYID:activity.id})
         let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdRecipient}&text=${msg}&parse_mode=markdown`
         https.get(target, (res) => {
             return console.log('Nft Received Telegram Notification sent')
