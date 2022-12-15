@@ -2,7 +2,7 @@ const { Telegraf } = require('telegraf');
 const dotenv = require('dotenv').config()
 const connectDB = require("./config/db");
 
-const { HelpMsg, joinBot } = require('./src/template');
+const { HelpMsg, joinBot,aboutBot, aboutOmniflix } = require('./src/template');
 const { subscribeCMD } = require('./src/subscribe');
 const { unSubscribeCMD } = require('./src/unsubscribe');
 // uncomment this to fetch data
@@ -16,6 +16,16 @@ const { activityFetch } = require('./src/activityFetching');
 connectDB()
 
 const bot = new Telegraf(process.env.token);
+bot.command('about',async (ctx) =>{
+    console.time(`Processing update ${ctx.update.message.update_id}`);
+   await ctx.reply(aboutBot) 
+   console.timeEnd(`Processing update ${ctx.update.message.update_id}`);
+})
+bot.command('omniflix',async (ctx) =>{
+    console.time(`Processing update ${ctx.update.message.update_id}`);
+   await ctx.reply(aboutOmniflix) 
+   console.timeEnd(`Processing update ${ctx.update.message.update_id}`);
+})
 bot.command('join',async (ctx) =>{
     console.time(`Processing update ${ctx.update.message.update_id}`);
    await ctx.reply(joinBot) 

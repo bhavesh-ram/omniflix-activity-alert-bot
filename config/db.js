@@ -1,11 +1,22 @@
 const mongoose = require("mongoose")
-
+const dotenv = require('dotenv').config()
 
 const connectDB = async () =>{
     try {
-        const conn =  await mongoose.connect('mongodb://localhost:27017/marketplace_bot',{useNewUrlParser: true, useUnifiedTopology: true})
+        if(process.env.DATABASE_NAME != undefined && process.env.DATABASE_URI != undefined ){
+            // console.log("aaa")
+            mongoose.connect(`${process.env.DATABASE_URI}/${process.env.DATABASE_NAME}`,{useNewUrlParser: true, useUnifiedTopology: true})
             // process.env.MONGO_URI
-        console.log("database connected");
+            console.log("database connected");
+        }else{
+            // console.log("aa")
+            mongoose.connect('mongodb://localhost:27017/marketplace_bot',{useNewUrlParser: true, useUnifiedTopology: true})
+            // process.env.MONGO_URI
+            console.log("database connected");
+        }
+        // await mongoose.connect('mongodb://localhost:27017/marketplace_bot',{useNewUrlParser: true, useUnifiedTopology: true})
+        //     // process.env.MONGO_URI
+        // console.log("database connected");
 
         
     } catch (error) {
