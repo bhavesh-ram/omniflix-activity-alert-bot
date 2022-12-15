@@ -1,1 +1,5 @@
+DATABASE_NAME="Database name"
+DATABASE_URI="Database url"
 token = "5234625656:AAEoOk5rDIGHFJFGH5DGDF6O0KOWEEvHuXByng"
+ACTIVITY_URL = activity layer base url
+DATALAYER_COLLECTION_URL=datalayer base url"
