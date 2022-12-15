@@ -2,11 +2,14 @@
 let HelpMsg =
   `
     HERE ARE THE AVAILABLE COMMANDS AND THEIR UTILITY
-	1. /subscribe - subscribe to OmniFlix network Auction updates and add omniflix address after subscribe \ne.g:(/subscribe omniflix1rtwjj6qfn62emyghhgfhhtjedv3kgd9j20tx)
-	2. /unsubscribe - unsubscribe updates
-  3. /join - join bot and subscribe to get personal updates of auction`
-// 3. /about - about bot`
-
+     /about - about Bot
+     /omniflix - about Omniflix
+	   /subscribe - subscribe to OmniFlix network Auction updates and add omniflix address after subscribe \ne.g:(/subscribe omniflix1rtwjj6qfn62emyghhgfhhtjedv3kgd9j20tx)
+	   /unsubscribe - unsubscribe updates
+     /join - join bot and subscribe to get personal updates of auction
+     `
+let aboutBot = `Lorem ipsum dolor sit amet, consectetur adipiscing elit,\nsed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`
+let aboutOmniflix =`Lorem ipsum dolor sit amet, consectetur adipiscing elit,\nsed do eiusmod tempor incididunt ut labore et dolore magna aliqua`
 let joinBot = `connect the bot to get personal message. Click the link below.\n@blockeater_bot\nand type /help or /subscribe.\nGet all updates`
 
 let createAuctionMsg = `***New Auction Listed On MarketPlace***  
@@ -114,6 +117,8 @@ https://omniflix.market/nft/{ACTIVITYID}`
 module.exports = {
   HelpMsg,
   joinBot,
+  aboutBot,
+  aboutOmniflix,
   createAuctionMsg,
   cancelAuctionMsg,
   removeAuctionMsg,
