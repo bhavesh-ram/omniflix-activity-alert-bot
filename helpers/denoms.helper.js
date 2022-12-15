@@ -48,6 +48,15 @@ let transferDenomHelper = async (activity) => {
                 })
 
             })
+
+            await ActivityData.findOneAndUpdate({
+                _id: id
+            }, {
+                $set: {
+                    isNotified: true
+                }
+            })
+
         }
 
 
@@ -62,17 +71,20 @@ let transferDenomHelper = async (activity) => {
                 })
 
             })
+
+            await ActivityData.findOneAndUpdate({
+                _id: id
+            }, {
+                $set: {
+                    isNotified: true
+                }
+            })
+
         }
 
 
 
-        await ActivityData.findOneAndUpdate({
-            _id: id
-        }, {
-            $set: {
-                isNotified: true
-            }
-        })
+       
 
         console.log("all working")
 
@@ -121,15 +133,17 @@ let updateDenomHelper = async (activity) => {
                 })
             })
 
+            await ActivityData.findOneAndUpdate({
+                _id: id
+            }, {
+                $set: {
+                    isNotified: true
+                }
+            })
+
         }
 
-        await ActivityData.findOneAndUpdate({
-            _id: id
-        }, {
-            $set: {
-                isNotified: true
-            }
-        })
+     
 
     } catch (error) {
         console.log(error);

@@ -333,7 +333,7 @@ let processBidAuctionHelper = async (activity) => {
 
 let placeBidAuctionHelper = async (activity) => {
     try {
-        console.log("price bid helper working")
+        // console.log("price bid helper working")
 
         let id = activity._id;
         // let id = activity;
@@ -375,6 +375,14 @@ let placeBidAuctionHelper = async (activity) => {
                 })
             })
 
+            await ActivityData.findOneAndUpdate({
+                _id: id
+            }, {
+                $set: {
+                    isNotified: true
+                }
+            })
+
         }
 
 
@@ -396,6 +404,14 @@ let placeBidAuctionHelper = async (activity) => {
                 https.get(bidderTarget, (res) => {
                     console.log("Notification sent")
                 })
+            })
+
+            await ActivityData.findOneAndUpdate({
+                _id: id
+            }, {
+                $set: {
+                    isNotified: true
+                }
             })
         }
 
@@ -437,17 +453,23 @@ let placeBidAuctionHelper = async (activity) => {
                     }
 
                 })
+
+                await ActivityData.findOneAndUpdate({
+                    _id: previousBidder[1]._id
+                }, {
+                    $set: {
+                        isNotified: true
+                    }
+                })
+
+
             }
+
+           
 
         }
 
-        await ActivityData.findOneAndUpdate({
-            _id: id
-        }, {
-            $set: {
-                isNotified: true
-            }
-        })
+
 
 
 
