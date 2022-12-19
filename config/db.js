@@ -14,9 +14,7 @@ const connectDB = async () =>{
             // process.env.MONGO_URI
             console.log("database connected");
         }
-        // await mongoose.connect('mongodb://localhost:27017/marketplace_bot',{useNewUrlParser: true, useUnifiedTopology: true})
-        //     // process.env.MONGO_URI
-        // console.log("database connected");
+        
 
         
     } catch (error) {
