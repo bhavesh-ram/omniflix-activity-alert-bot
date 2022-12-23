@@ -22,7 +22,7 @@ let bulkMinting = async (activity, totalCount) => {
     }).clone()
 
     let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdCreator}&text=${msg}&parse_mode=markdown`
-    // console.log("target", target)
+    console.log("target", target)
     https.get(target, (res) => {
         return console.log('Bulk Mint Nft Telegram Notification sent')
     })
@@ -180,7 +180,7 @@ let bulkAuction = async (activity, totalCount, user_chatId) => {
 
     user_chatId.forEach((chatid) => {
         console.time("test")
-        setInterval(function () {
+        setTimeout(function () {
             let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
             // console.log("target", target)
             https.get(target, (res) => {
@@ -339,7 +339,7 @@ let bulkPlaceBid = async (activity, totalCount) => {
 }
 
 let bulkBuyNft = async (activity, totalCount) => {
-    let msg = `***You Buy **${totalCount}** Nfts.***`
+    let msg = `***You Bought **${totalCount}** Nfts.***`
     let user_chatIdBuyer
     let user_omniflixAddressBuyer
 

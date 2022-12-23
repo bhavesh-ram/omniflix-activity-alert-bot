@@ -62,6 +62,7 @@ let MainScheduler = async () => {
                             }).clone()
                             await ActivityData.count({
                                 "block": activity.block,
+                                "type": activity.type,
                                 "isNotified": false,
 
                             }, async (error, totalCount) => {
