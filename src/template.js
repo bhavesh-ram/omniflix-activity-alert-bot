@@ -10,7 +10,7 @@ let HelpMsg =
      `
 let aboutBot = `Lorem ipsum dolor sit amet, consectetur adipiscing elit,\nsed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`
 let aboutOmniflix =`Lorem ipsum dolor sit amet, consectetur adipiscing elit,\nsed do eiusmod tempor incididunt ut labore et dolore magna aliqua`
-let joinBot = `connect the bot to get personal message. Click the link below.\n@blockeater_bot\nand type /help or /subscribe.\nGet all updates`
+let joinBot = `connect the bot to get personal message. Click the link below.\n@OmniFlix_Alert_bot\nand type /help or /subscribe.\nGet all updates`
 
 let createAuctionMsg = `***New Auction Listed On MarketPlace***  
 https://omniflix.market/nft/{ACTIVITYNFT_IDID}  
