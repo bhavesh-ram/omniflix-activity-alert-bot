@@ -54,95 +54,138 @@ let createAuctionHelper = async (activity) => {
 }
 
 let cancelAuctionHelper = async (activity) => {
-    // console.log(activities)
-    let user_chatId = []
-    await userData.find({
-        "isSubscribe": true
+    let user_chatIdOwner
+    let user_omniflixAddressOwner
+
+    await userData.findOne({
+        "isSubscribe": true,
+        "omniflixAddress": activity.owner
     }, async (error, result) => {
         if (error) {
             return console.log(error)
-        } else if (result && result.length) {
-            user_chatId.splice(0,)
-            result.forEach(user => {
-                user_chatId.push(user.userId)
-            })
+        } else if (result) {
+            user_chatIdOwner = result.userId
+            user_omniflixAddressOwner = result.omniflixAddress
+
         } else {
-            return console.log("no User subscribed")
+            return console.log("Cancel Auction user not subscribed")
         }
     }).clone()
-    console.log(user_chatId)
-    // let msg = ` ***Auction Cancelled.***
-    // **Click the below Link:**
-    // (https://omniflix.market/nft/${activity.nft_id.id})`
-    let msg = cancelAuctionMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
-    user_chatId.forEach((chatid) => {
-        let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
+
+
+    if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
+       
+        let msg = cancelAuctionMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
+
+        let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
         console.log("target", target)
         https.get(target, (res) => {
             return console.log('Cancelled Auction Telegram Notification sent')
         })
-    })
-    ActivityData.findOneAndUpdate({
-        "nftId": activity.nft_id.id,
-        "tx_hash": activity.tx_hash,
-        "id": activity.id
-    }, {
-        $set: {
-            "isNotified": true,
-        }
-    }, async (error) => {
-        if (error) {
-            return console.log(error)
-        }
-    })
+
+        ActivityData.findOneAndUpdate({
+            "_id": activity._id
+        }, {
+            $set: {
+                "isNotified": true,
+            }
+        }, async (error) => {
+            if (error) {
+                return console.log(error)
+            }
+        })
+
+    }
+    // let user_chatId = []
+    // await userData.find({
+    //     "isSubscribe": true
+    // }, async (error, result) => {
+    //     if (error) {
+    //         return console.log(error)
+    //     } else if (result && result.length) {
+    //         user_chatId.splice(0,)
+    //         result.forEach(user => {
+    //             user_chatId.push(user.userId)
+    //         })
+    //     } else {
+    //         return console.log("no User subscribed")
+    //     }
+    // }).clone()
+    // console.log(user_chatId)
+    // let msg = ` ***Auction Cancelled.***
+    // **Click the below Link:**
+    // (https://omniflix.market/nft/${activity.nft_id.id})`
+    // let msg = cancelAuctionMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
+    // user_chatId.forEach((chatid) => {
+    //     let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
+    //     console.log("target", target)
+    //     https.get(target, (res) => {
+    //         return console.log('Cancelled Auction Telegram Notification sent')
+    //     })
+    // })
+    // ActivityData.findOneAndUpdate({
+    //     "nftId": activity.nft_id.id,
+    //     "tx_hash": activity.tx_hash,
+    //     "id": activity.id
+    // }, {
+    //     $set: {
+    //         "isNotified": true,
+    //     }
+    // }, async (error) => {
+    //     if (error) {
+    //         return console.log(error)
+    //     }
+    // })
 
 
 }
 
 let removeAuctionHelper = async (activity) => {
 
-    let user_chatId = []
-    await userData.find({
-        "isSubscribe": true
+    let user_chatIdOwner
+    let user_omniflixAddressOwner
+
+    await userData.findOne({
+        "isSubscribe": true,
+        "omniflixAddress": activity.owner
     }, async (error, result) => {
         if (error) {
             return console.log(error)
-        } else if (result && result.length) {
-            user_chatId.splice(0,)
-            result.forEach(user => {
-                user_chatId.push(user.userId)
-            })
+        } else if (result) {
+            user_chatIdOwner = result.userId
+            user_omniflixAddressOwner = result.omniflixAddress
+
         } else {
-            return console.log("no User subscribed")
+            return console.log("Cancel Auction user not subscribed")
         }
     }).clone()
-    // console.log(user_chatId)
-    // let msg = ` ***Auction Removed From Marketplace.***
-    // **Click the below Link:**
-    // (https://omniflix.market/nft/${activity.nft_id.id})`
-    let msg = removeAuctionMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
-    user_chatId.forEach((chatid) => {
-        let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-        console.log("target",target)
+    
+    if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
+       
+        let msg = removeAuctionMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
+
+        let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
+        console.log("target", target)
         https.get(target, (res) => {
             return console.log('Removed Auction Telegram Notification sent')
         })
-    })
-    ActivityData.findOneAndUpdate({
-        "nftId": activity.nft_id.id,
-        "id": activity.id,
-        "type": activity.type
-    }, {
-        $set: {
-            "isNotified": true,
-        }
-    }, async (error) => {
-        if (error) {
-            return console.log(error)
-        }
-    })
+
+        ActivityData.findOneAndUpdate({
+            "_id": activity._id
+        }, {
+            $set: {
+                "isNotified": true,
+            }
+        }, async (error) => {
+            if (error) {
+                return console.log(error)
+            }
+        })
+
+    }
 
 
+    
 }
 
 let processBidAuctionHelper = async (activity) => {
@@ -229,107 +272,6 @@ let processBidAuctionHelper = async (activity) => {
 
 }
 
-// let placeBidAuctionHelper = async (activity)=>{
-//     try{
-//         let id = activity._id;
-//         // let id = activity;
-
-//         let activityData = await ActivityData.findOne({_id:id});
-//         if(!activityData){
-//             return "Activity not found"
-//         } 
-
-//         if(!activityData.type=="MsgPlaceBid"){
-//             return "Not valid message type for this helper"
-//         }
-
-//         if(activityData.isNotified == "true"){
-//             return "Already Notified"
-//         }
-
-//         let nftId = activityData.nft_id.id;
-
-//         let ownerData = await userData.findOne({
-//             isSubscribed:true,
-//             omniflixAddress:activityData.nft_id.owner          
-//         })
-
-//         if(ownerData){
-
-//             let ownerMsg = ` ***New bid placed on your auction to check.***
-//             **Click the below Link:**
-//             (https://omniflix.market/nft/${nftId})`
-
-//             let ownerTarget =  `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${ownerData.userId}&text=${ownerMsg}&parse_mode=markdown`
-
-//             https.get(ownerTarget,(res)=>{
-//                 console.log("Notification sent")
-//             })
-//         }
-
-//         let bidderData = await userData.findOne({
-//             isSubscribed:true,
-//             omniflixAddress:activityData.bidder
-//         })
-
-//         if(bidderData){
-
-//             let bidderMsg = ` ***You have placed a new bid on the below to check.***
-//             **Click the below Link:**
-//             (https://omniflix.market/nft/${nftId})`
-
-//             let bidderTarget =  `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${bidderData.userId}&text=${bidderMsg}&parse_mode=markdown`
-
-//             https.get(bidderTarget,(res)=>{
-//                 console.log("Notification sent")
-//             })
-//         }
-
-//         // if(await ActivityData.find({auction_id:activityData.auction_id}).length > 1){
-//         //     console.log("greater than 1")
-
-//         // }
-
-//         let previousBidder = await ActivityData.find({
-//             auction_id:activityData.auction_id
-//         }).sort({'amount.amount':-1}).limit(2);
-//         // console.log(previousBidder)
-
-//         if(previousBidder.length > 1){
-
-//             // console.log(previousBidder[1].bidder)
-//             let previousBidderData = await userData.findOne({
-//                 isSubscribed:true,
-//                 omniflixAddress:previousBidder[1].bidder
-//             })
-
-//             // console.log(previousBidderData);
-
-//             if(previousBidderData){
-//                 let previousBidderMsg = ` ***Your Bid has been overbidden to check. *** 
-//                 **Click the below Link**
-//                 (https://omniflix.market/nft/${nftId})`
-//                 let previousBidderTarget = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${previousBidderData.userId}&text=${previousBidderMsg}&parse_mode=markdown`
-//                 https.get(previousBidderTarget,(res)=>{
-//                     console.log("Notification sent");
-//                 })
-//             }
-//         }
-//         await ActivityData.findOneAndUpdate({
-//             _id:id},{
-//             $set:{
-//                 isNotified:true
-//             }
-
-//         })
-
-//     }catch(error){
-//         console.log(error)
-
-
-//     }
-
-// }
 
 let placeBidAuctionHelper = async (activity) => {
     try {

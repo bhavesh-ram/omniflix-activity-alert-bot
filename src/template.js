@@ -1,12 +1,13 @@
+let StartMsg = `Hello {USER_NAME},\nEnter /help To get list of all commands`
 
 let HelpMsg =
   `
     HERE ARE THE AVAILABLE COMMANDS AND THEIR UTILITY
-     /about - about Bot
-     /omniflix - about Omniflix
-	   /subscribe - subscribe to OmniFlix network Auction updates and add omniflix address after subscribe \ne.g:(/subscribe omniflix1rtwjj6qfn62emyghhgfhhtjedv3kgd9j20tx)
-	   /unsubscribe - unsubscribe updates
-     /join - join bot and subscribe to get personal updates of auction
+     /about - About Bot
+     /omniflix - About OmniFlix
+	   /subscribe - subscribe to OmniFlix Alert Bot to get Marketplace updates.(Note:-Add OmniFlix address after subscribe \ni.e. /subscribe omniflix1rtwjj6qfn62emyghhgfhhtjedv3kgd9j20tx)
+	   /unsubscribe - unsubscribe from Alerts/Updates
+     /join - join bot and subscribe to get personal updates of Marketplace
      `
 let aboutBot = `Lorem ipsum dolor sit amet, consectetur adipiscing elit,\nsed do eiusmod tempor incididunt ut labore et dolore magna aliqua.`
 let aboutOmniflix =`Lorem ipsum dolor sit amet, consectetur adipiscing elit,\nsed do eiusmod tempor incididunt ut labore et dolore magna aliqua`
@@ -115,6 +116,7 @@ https://omniflix.market/nft/{ACTIVITYID}`
 }
 
 module.exports = {
+  StartMsg,
   HelpMsg,
   joinBot,
   aboutBot,
