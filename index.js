@@ -2,7 +2,7 @@ const { Telegraf } = require('telegraf');
 const dotenv = require('dotenv').config()
 const connectDB = require("./config/db");
 
-const { HelpMsg, joinBot,aboutBot, aboutOmniflix } = require('./src/template');
+const { HelpMsg,StartMsg, joinBot,aboutBot, aboutOmniflix } = require('./src/template');
 const { subscribeCMD } = require('./src/subscribe');
 const { unSubscribeCMD } = require('./src/unsubscribe');
 // uncomment this to fetch data
@@ -10,12 +10,20 @@ const { unSubscribeCMD } = require('./src/unsubscribe');
 const { mainSchedulerData } = require('./src/mainJobScheduler');
 const { activityFetch } = require('./src/activityFetching');
 
-
+String.prototype.fmt = function (hash) {
+    var string = this, key; for (key in hash) string = string.replace(new RegExp('\\{' + key + '\\}', 'gm'), hash[key]); return string
+}
 
 
 connectDB()
 
 const bot = new Telegraf(process.env.token);
+bot.command('start',async (ctx) =>{
+    console.time(`Processing update ${ctx.update.message.update_id}`);
+    let userName = ctx.update.message.from.username
+   await ctx.reply(StartMsg.fmt({ USER_NAME:userName})) 
+   console.timeEnd(`Processing update ${ctx.update.message.update_id}`);
+})
 bot.command('about',async (ctx) =>{
     console.time(`Processing update ${ctx.update.message.update_id}`);
    await ctx.reply(aboutBot) 
