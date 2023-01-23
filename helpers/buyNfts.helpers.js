@@ -1,5 +1,7 @@
 const dotenv = require('dotenv').config()
 const https = require('https')
+const { Telegraf } = require('telegraf');
+const bot = new Telegraf(process.env.token);
 
 const { userData } = require('../models/user.model');
 const { ActivityData } = require("../models/activity.model");
@@ -53,9 +55,22 @@ let buyNftHelper = async (activity) => {
 
         // let msg = ` ***Nft Sold***: (https://omniflix.market/nft/${activity.nft_id.id})`
         let msg = buyNftHelperMsg.NftOwnerMsg.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id})
-        let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
-        https.get(target, (res) => {
-            return console.log('Buy-Nft Owner Telegram Notification sent')
+        let mediaUrl = buyNftHelperMsg.url.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id})
+
+        // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
+        // https.get(target, (res) => {
+        //     return console.log('Buy-Nft Owner Telegram Notification sent')
+        // })
+
+        bot.telegram.sendMessage(user_chatIdOwner,msg,{
+            parse_mode:'Markdown',
+            reply_markup:{
+                inline_keyboard:[
+                    [
+                        {text:"Nft Sold",url:mediaUrl}
+                    ]
+                ]
+            }
         })
         
         ActivityData.findOneAndUpdate({
@@ -74,10 +89,24 @@ let buyNftHelper = async (activity) => {
     if(user_chatIdBuyer != undefined && user_omniflixAddressBuyer != undefined){
         // let msg = ` ***You Bought New NFT*** (https://omniflix.market/nft/${activity.nft_id.id})`
         let msg = buyNftHelperMsg.NftBuyerMsg.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id})
-        let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdBuyer}&text=${msg}&parse_mode=markdown`
-        https.get(target, (res) => {
-            return console.log('Buy-Nft Buyer Telegram Notification sent')
+        let mediaUrl = buyNftHelperMsg.url.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id})
+
+        // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdBuyer}&text=${msg}&parse_mode=markdown`
+        // https.get(target, (res) => {
+        //     return console.log('Buy-Nft Buyer Telegram Notification sent')
+        // })
+
+        bot.telegram.sendMessage(user_chatIdBuyer,msg,{
+            parse_mode:'Markdown',
+            reply_markup:{
+                inline_keyboard:[
+                    [
+                        {text:"You Bought New NFT",url:mediaUrl}
+                    ]
+                ]
+            }
         })
+
         ActivityData.findOneAndUpdate({
             "_id":activity._id
         }, {
@@ -115,13 +144,26 @@ let burnNftHelper = async (activity) => {
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
         // let msg = ` *** You Delisting Following Nft From MarketPlace.***
         // (https://omniflix.market/nft/${activity.id})`
-        let msg = burnNftHelperMsg.fmt({ ACTIVITYID:activity.id})
+        let msg = burnNftHelperMsg.message.fmt({ ACTIVITYID:activity.id})
+        let mediaUrl = burnNftHelperMsg.url.fmt({ ACTIVITYID:activity.id})
 
-        let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
-        console.log("target", target)
-        https.get(target, (res) => {
-            return console.log('Burn ONFT Telegram Notification sent')
+        // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
+        // console.log("target", target)
+        // https.get(target, (res) => {
+        //     return console.log('Burn ONFT Telegram Notification sent')
+        // })
+
+        bot.telegram.sendMessage(user_chatIdOwner,msg,{
+            parse_mode:'Markdown',
+            reply_markup:{
+                inline_keyboard:[
+                    [
+                        {text:"Burned NFT",url:mediaUrl}
+                    ]
+                ]
+            }
         })
+
 
         ActivityData.findOneAndUpdate({
             "_id": activity._id
@@ -169,10 +211,22 @@ let mintONFTHelper = async (activity)=>{
             creatorData.forEach((data)=>{
                 // let msg = `You have minted a new nft, to check %0AClick the below Link %0A(https://omniflix.market/nft/${nftId})`;
                 let msg = mintONFTHelperMsg.creatorMsg.fmt({ NFTID:nftId})
+                let mediaUrl = mintONFTHelperMsg.url.fmt({ NFTID:nftId})
                 let userId = data.userId;
-                let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${userId}&text=${msg}&parse_mode=markdown`
-                https.get(target,(res)=>{
-                    console.log("Notification sent");
+                // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${userId}&text=${msg}&parse_mode=markdown`
+                // https.get(target,(res)=>{
+                //     console.log("Notification sent");
+                // })
+
+                bot.telegram.sendMessage(userId,msg,{
+                    parse_mode:'Markdown',
+                    reply_markup:{
+                        inline_keyboard:[
+                            [
+                                {text:"Minted New Nft",url:mediaUrl}
+                            ]
+                        ]
+                    }
                 })
                 
             })
@@ -183,10 +237,22 @@ let mintONFTHelper = async (activity)=>{
             ownerData.forEach((data)=>{
                 // let msg = `A new NFT was minted in you account, to check %0AClick the below Link %0A(https://omniflix.market/nft/${nftId})`;
                 let msg = mintONFTHelperMsg.ownerMsg.fmt({ NFTID:nftId})
+                let mediaUrl = mintONFTHelperMsg.url.fmt({ NFTID:nftId})
                 let userId = data.userId;
-                let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${userId}&text=${msg}&parse_mode=markdown`
-                https.get(target,(res)=>{
-                    console.log("Notification sent");
+                // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${userId}&text=${msg}&parse_mode=markdown`
+                // https.get(target,(res)=>{
+                //     console.log("Notification sent");
+                // })
+
+                bot.telegram.sendMessage(userId,msg,{
+                    parse_mode:'Markdown',
+                    reply_markup:{
+                        inline_keyboard:[
+                            [
+                                {text:"Minted New Nft",url:mediaUrl}
+                            ]
+                        ]
+                    }
                 })
                 
             })

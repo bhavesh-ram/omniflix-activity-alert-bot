@@ -51,10 +51,23 @@ let transferNftHelper = async (activity) => {
         // let msg = ` ***You Transferred Nft.*** 
         // (https://omniflix.market/nft/${activity.id})`
         let msg = transferNftHelperMsg.senderMsg.fmt({ ACTIVITYID:activity.id})
-        let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdSender}&text=${msg}&parse_mode=markdown`
-        https.get(target, (res) => {
-            return console.log('Transferred Nft Telegram Notification sent')
+        let mediaUrl = transferNftHelperMsg.url.fmt({ ACTIVITYID:activity.id})
+        // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdSender}&text=${msg}&parse_mode=markdown`
+        // https.get(target, (res) => {
+        //     return console.log('Transferred Nft Telegram Notification sent')
+        // })
+
+        bot.telegram.sendMessage(user_chatIdSender,msg,{
+            parse_mode:'Markdown',
+            reply_markup:{
+                inline_keyboard:[
+                    [
+                        {text:" NFT Transferred",url:mediaUrl}
+                    ]
+                ]
+            }
         })
+
         ActivityData.findOneAndUpdate({
             "_id":activity._id
         }, {
@@ -72,10 +85,23 @@ let transferNftHelper = async (activity) => {
         // let msg = ` ***You Receved New NFT In your Account*** 
         // (https://omniflix.market/nft/${activity.id})`
         let msg = transferNftHelperMsg.receiverMsg.fmt({ ACTIVITYID:activity.id})
-        let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdRecipient}&text=${msg}&parse_mode=markdown`
-        https.get(target, (res) => {
-            return console.log('Nft Received Telegram Notification sent')
+        let mediaUrl = transferNftHelperMsg.url.fmt({ ACTIVITYID:activity.id})
+        // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdRecipient}&text=${msg}&parse_mode=markdown`
+        // https.get(target, (res) => {
+        //     return console.log('Nft Received Telegram Notification sent')
+        // })
+
+        bot.telegram.sendMessage(user_chatIdRecipient,msg,{
+            parse_mode:'Markdown',
+            reply_markup:{
+                inline_keyboard:[
+                    [
+                        {text:"NFT Receved",url:mediaUrl}
+                    ]
+                ]
+            }
         })
+
         ActivityData.findOneAndUpdate({
             "_id":activity._id
         }, {

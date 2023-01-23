@@ -18,6 +18,7 @@ String.prototype.fmt = function (hash) {
 connectDB()
 
 const bot = new Telegraf(process.env.token);
+
 bot.command('start',async (ctx) =>{
     console.time(`Processing update ${ctx.update.message.update_id}`);
     let userName = ctx.update.message.from.username
@@ -26,6 +27,7 @@ bot.command('start',async (ctx) =>{
 })
 bot.command('about',async (ctx) =>{
     console.time(`Processing update ${ctx.update.message.update_id}`);
+    // console.log(ctx)
    await ctx.reply(aboutBot) 
    console.timeEnd(`Processing update ${ctx.update.message.update_id}`);
 })
@@ -56,22 +58,3 @@ process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
 
 
-// sample message
-// message: {
-//     message_id: 31,
-//     from: {
-//       id: 900794755,
-//       is_bot: false,
-//       first_name: 'BlockEater',
-//       username: 'BlockEater'
-//     },
-//     chat: {
-//       id: -837257700,
-//       title: 'TELEGRAM-bot demo-group',
-//       type: 'group',
-//       all_members_are_administrators: true
-//     },
-//     date: 1669728465,
-//     text: '/text',
-//     entities: [ [Object] ]
-//   }

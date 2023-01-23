@@ -24,7 +24,6 @@ let MainScheduler = async () => {
                 return console.log(error)
             } else if (!error && res.statusCode == 200) {
                 let collections = body.result.list
-                // console.log(collections)
                 verifiedCollection.splice(0,)
                 collections.forEach(collection => {
                     verifiedCollection.push(collection.id)
@@ -39,12 +38,12 @@ let MainScheduler = async () => {
                     },
                     limit: 1
                 }, async (error, activities) => {
-                    // console.log(activities)
+
                     if (error) {
                         console.log(error)
                     } else if (activities && activities.length) {
                         activities.forEach(async (activity) => {
-                            // console.log(activity._id)
+
                             let user_chatId = []
                             await userData.find({
                                 "isSubscribe": true,
@@ -66,7 +65,7 @@ let MainScheduler = async () => {
                                 "isNotified": false,
 
                             }, async (error, totalCount) => {
-                                // console.log(activities)
+
                                 if (error) {
                                     console.log(error)
                                 } else if (totalCount > 3) {
@@ -74,355 +73,47 @@ let MainScheduler = async () => {
                                     console.log(totalCount, activity.type, activity.block, user_chatId)
                                     if (activity.type == "MsgCreateAuction") {
                                         bulkAuction(activity, totalCount, user_chatId)
-                                        // let msg = ` **${totalCount}** ***New Bulk Auction Listed On MarketPlace.***  https://omniflix.market/nft`
-
-                                        // user_chatId.forEach((chatid) => {
-                                        //     console.time("test")
-                                        //     setInterval(function () {
-                                        //         let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-                                        //         // console.log("target", target)
-                                        //         https.get(target, (res) => {
-                                        //             return console.log('New Bulk Auction Telegram Notification sent')
-                                        //         })
-
-
-                                        //     }, 500)
-                                        //     console.timeEnd("test")
-                                        // })
-
-                                        // await ActivityData.updateMany({
-                                        //     type: activity.type,
-                                        //     block: activity.block
-                                        // }, {
-                                        //     $set: {
-                                        //         "isNotified": true,
-                                        //     }
-                                        // }, async (error) => {
-                                        //     if (error) {
-                                        //         return console.log(error)
-                                        //     }
-                                        // }).clone()
                                     } else if (activity.type == "MsgListNFT") {
                                         bulkListingNft(activity, totalCount, user_chatId)
-                                        // let msg = `**${totalCount}** ***New Listings On MarketPlace.***  https://omniflix.market/nft`
-                                        // user_chatId.forEach((chatid) => {
-                                        //     setTimeout(function () {
-                                        //         let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-                                        //         // console.log("target", target)
-                                        //         https.get(target, (res) => {
-                                        //             return console.log('New Bulk Listing Telegram Notification sent')
-                                        //         })
-                                        //         // sleep(100)
 
-                                        //     }, 500)
-                                        // })
-
-                                        // await ActivityData.updateMany({
-                                        //     type: activity.type,
-                                        //     block: activity.block
-                                        // }, {
-                                        //     $set: {
-                                        //         "isNotified": true,
-                                        //     }
-                                        // }, async (error) => {
-                                        //     if (error) {
-                                        //         return console.log(error)
-                                        //     }
-                                        // }).clone()
                                     } else if (activity.type == "MsgCancelAuction") {
                                         bulkAuctionCancel(activity, totalCount, user_chatId)
-                                        // let msg = `**${totalCount}** *** Auction Cancel From MarketPlace.***`
-                                        // user_chatId.forEach((chatid) => {
-                                        //     setTimeout(function () {
-                                        //         let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-                                        //         // console.log("target", target)
-                                        //         https.get(target, (res) => {
-                                        //             return console.log('Bulk Auction Cancel Telegram Notification sent')
-                                        //         })
-                                        //         // sleep(100)
 
-                                        //     }, 500)
-                                        // })
-
-                                        // await ActivityData.updateMany({
-                                        //     type: activity.type,
-                                        //     block: activity.block
-                                        // }, {
-                                        //     $set: {
-                                        //         "isNotified": true,
-                                        //     }
-                                        // }, async (error) => {
-                                        //     if (error) {
-                                        //         return console.log(error)
-                                        //     }
-                                        // }).clone()
                                     } else if (activity.type == "RemoveAuction") {
                                         bulkAuctionRemoved(activity, totalCount, user_chatId)
-                                        // let msg = `**${totalCount}** ***Auctions Removed From MarketPlace.***`
-                                        // user_chatId.forEach((chatid) => {
-                                        //     setTimeout(function () {
-                                        //         let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-                                        //         // console.log("target", target)
-                                        //         https.get(target, (res) => {
-                                        //             return console.log('New Bulk Listing Telegram Notification sent')
-                                        //         })
-                                        //         // sleep(100)
 
-                                        //     }, 500)
-                                        // })
-
-                                        // await ActivityData.updateMany({
-                                        //     type: activity.type,
-                                        //     block: activity.block
-                                        // }, {
-                                        //     $set: {
-                                        //         "isNotified": true,
-                                        //     }
-                                        // }, async (error) => {
-                                        //     if (error) {
-                                        //         return console.log(error)
-                                        //     }
-                                        // }).clone()
                                     } else if (activity.type == "MsgDeListNFT") {
                                         bulkDeListingNft(activity, totalCount, user_chatId)
-                                        // let msg = `**${totalCount}** ***Nfts DeListed From MarketPlace.***`
-                                        // user_chatId.forEach((chatid) => {
-                                        //     setTimeout(function () {
-                                        //         let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-                                        //         // console.log("target", target)
-                                        //         https.get(target, (res) => {
-                                        //             return console.log('Bulk Delisting Telegram Notification sent')
-                                        //         })
-                                        //         // sleep(100)
 
-                                        //     }, 500)
-                                        // })
-
-                                        // await ActivityData.updateMany({
-                                        //     type: activity.type,
-                                        //     block: activity.block
-                                        // }, {
-                                        //     $set: {
-                                        //         "isNotified": true,
-                                        //     }
-                                        // }, async (error) => {
-                                        //     if (error) {
-                                        //         return console.log(error)
-                                        //     }
-                                        // }).clone()
                                     } else if (activity.type == "MsgBurnONFT") {
                                         bulkBurnNft(activity, totalCount)
-                                        // let msg = `***You Burned **${totalCount}** Nfts.***`
-                                        // user_chatId.forEach((chatid) => {
-                                        //     setTimeout(function () {
-                                        //         let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-                                        //         // console.log("target", target)
-                                        //         https.get(target, (res) => {
-                                        //             return console.log('Bulk Burn Nft Telegram Notification sent')
-                                        //         })
-                                        //         // sleep(100)
 
-                                        //     }, 500)
-                                        // })
-
-                                        // await ActivityData.updateMany({
-                                        //     type: activity.type,
-                                        //     block: activity.block
-                                        // }, {
-                                        //     $set: {
-                                        //         "isNotified": true,
-                                        //     }
-                                        // }, async (error) => {
-                                        //     if (error) {
-                                        //         return console.log(error)
-                                        //     }
-                                        // }).clone()
 
                                     } else if (activity.type == "MsgMintONFT") {
                                         bulkMinting(activity, totalCount)
-                                        // let msg = `***You Minted **${totalCount}** Nfts.***`
-                                        // user_chatId.forEach((chatid) => {
-                                        //     setTimeout(function () {
-                                        //         let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-                                        //         // console.log("target", target)
-                                        //         https.get(target, (res) => {
-                                        //             return console.log('Bulk Mint Nft Telegram Notification sent')
-                                        //         })
-                                        //     }, 500)
-                                        // })
-                                        // await ActivityData.updateMany({
-                                        //     type: activity.type,
-                                        //     block: activity.block
-                                        // }, {
-                                        //     $set: {
-                                        //         "isNotified": true,
-                                        //     }
-                                        // }, async (error) => {
-                                        //     if (error) {
-                                        //         return console.log(error)
-                                        //     }
-                                        // }).clone()
+
                                     } else if (activity.type == "MsgTransferONFT") {
                                         bulkTransfer(activity, totalCount)
-                                        // let msg = `***You Transfered **${totalCount}** Nfts.***`
-                                        // let user_chatIdSender
-                                        // let user_omniflixAddressSender
-                                        // await userData.findOne({
-                                        //     "isSubscribe": true,
-                                        //     "omniflixAddress": activity.sender
-                                        // },async(error, result)=>{
-                                        //     if (error) {
-                                        //         return console.log(error)
-                                        //     } else if (result) {
-                                        //         user_chatIdSender = result.userId
-                                        //         user_omniflixAddressSender = result.omniflixAddress
-                                        //     } else {
-                                        //         return console.log("Transfer Nft Owner Not subscribed")
-                                        //     }
-                                        // }).clone()
 
-                                        // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdSender}&text=${msg}&parse_mode=markdown`
-                                        //         // console.log("target", target)
-                                        // https.get(target, (res) => {
-                                        //         return console.log('Bulk Mint Nft Telegram Notification sent')
-                                        // })
-
-                                        // await ActivityData.updateMany({
-                                        //     type: activity.type,
-                                        //     block: activity.block
-                                        // }, {
-                                        //     $set: {
-                                        //         "isNotified": true,
-                                        //     }
-                                        // }, async (error) => {
-                                        //     if (error) {
-                                        //         return console.log(error)
-                                        //     }
-                                        // }).clone()
                                     } else if (activity.type == "ProcessBid") {
                                         bulkProcessBid(activity, totalCount)
-                                        // let msg = `***You Won **${totalCount}** Auctions.***`
-                                        // user_chatId.forEach((chatid) => {
-                                        //     setTimeout(function () {
-                                        //         let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-                                        //         // console.log("target", target)
-                                        //         https.get(target, (res) => {
-                                        //             return console.log('Bulk Mint Nft Telegram Notification sent')
-                                        //         })
-                                        //     }, 500)
-                                        // })
-                                        // await ActivityData.updateMany({
-                                        //     type: activity.type,
-                                        //     block: activity.block
-                                        // }, {
-                                        //     $set: {
-                                        //         "isNotified": true,
-                                        //     }
-                                        // }, async (error) => {
-                                        //     if (error) {
-                                        //         return console.log(error)
-                                        //     }
-                                        // }).clone()
+
                                     } else if (activity.type == "MsgPlaceBid") {
                                         bulkPlaceBid(activity, totalCount)
-                                        // let msg = `***You Place **${totalCount}** bids.***`
-                                        // user_chatId.forEach((chatid) => {
-                                        //     setTimeout(function () {
-                                        //         let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-                                        //         // console.log("target", target)
-                                        //         https.get(target, (res) => {
-                                        //             return console.log('Bulk Mint Nft Telegram Notification sent')
-                                        //         })
-                                        //     }, 500)
-                                        // })
-                                        // await ActivityData.updateMany({
-                                        //     type: activity.type,
-                                        //     block: activity.block
-                                        // }, {
-                                        //     $set: {
-                                        //         "isNotified": true,
-                                        //     }
-                                        // }, async (error) => {
-                                        //     if (error) {
-                                        //         return console.log(error)
-                                        //     }
-                                        // }).clone()
+
                                     } else if (activity.type == "MsgBuyNFT") {
                                         bulkBuyNft(activity, totalCount)
-                                        // let msg = `***You Buy **${totalCount}** Nfts.***`
-                                        // user_chatId.forEach((chatid) => {
-                                        //     setTimeout(function () {
-                                        //         let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-                                        //         // console.log("target", target)
-                                        //         https.get(target, (res) => {
-                                        //             return console.log('Bulk Buy Nft Telegram Notification sent')
-                                        //         })
-                                        //     }, 500)
-                                        // })
-                                        // await ActivityData.updateMany({
-                                        //     type: activity.type,
-                                        //     block: activity.block
-                                        // }, {
-                                        //     $set: {
-                                        //         "isNotified": true,
-                                        //     }
-                                        // }, async (error) => {
-                                        //     if (error) {
-                                        //         return console.log(error)
-                                        //     }
-                                        // }).clone()
+
                                     } else if (activity.type == "MsgUpdateDenom") {
                                         bulkUpdateCollection(activity, totalCount)
-                                        // let msg = `***You Updated **${totalCount}** Collections.***`
-                                        // user_chatId.forEach((chatid) => {
-                                        //     setTimeout(function () {
-                                        //         let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-                                        //         // console.log("target", target)
-                                        //         https.get(target, (res) => {
-                                        //             return console.log('Bulk Collectio Update Telegram Notification sent')
-                                        //         })
-                                        //     }, 500)
-                                        // })
-                                        // await ActivityData.updateMany({
-                                        //     type: activity.type,
-                                        //     block: activity.block
-                                        // }, {
-                                        //     $set: {
-                                        //         "isNotified": true,
-                                        //     }
-                                        // }, async (error) => {
-                                        //     if (error) {
-                                        //         return console.log(error)
-                                        //     }
-                                        // }).clone()
+
                                     } else if (activity.type == "MsgTransferDenom") {
                                         bulkTransferCollection(activity, totalCount)
-                                        // let msg = `***You Transfered **${totalCount}** Collections.***`
-                                        // user_chatId.forEach((chatid) => {
-                                        //     setTimeout(function () {
-                                        //         let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-                                        //         // console.log("target", target)
-                                        //         https.get(target, (res) => {
-                                        //             return console.log('Bulk Transfer Collection Telegram Notification sent')
-                                        //         })
-                                        //     }, 500)
-                                        // })
-                                        // await ActivityData.updateMany({
-                                        //     type: activity.type,
-                                        //     block: activity.block
-                                        // }, {
-                                        //     $set: {
-                                        //         "isNotified": true,
-                                        //     }
-                                        // }, async (error) => {
-                                        //     if (error) {
-                                        //         return console.log(error)
-                                        //     }
-                                        // }).clone()
+
                                     }
                                 } else {
                                     if (activity.type == "MsgListNFT" || activity.type == "MsgCreateAuction") {
-                                        // console.log(verifiedCollection.length)
+
                                         let denom = activity.denom_id.id
                                         if (verifiedCollection.includes(denom)) {
                                             if (activity.type == "MsgCreateAuction") {
@@ -461,7 +152,7 @@ let MainScheduler = async () => {
                                         } else if (activity.type == "MsgListNFT") {
                                             listingHelper(activity)
                                         } else if (activity.type == "MsgCancelAuction") {
-                                            // console.log("aaa")
+
                                             cancelAuctionHelper(activity)
                                         } else if (activity.type == "RemoveAuction") {
                                             removeAuctionHelper(activity)

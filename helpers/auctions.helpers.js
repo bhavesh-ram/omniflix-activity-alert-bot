@@ -1,13 +1,17 @@
 const dotenv = require('dotenv').config()
 const https = require('https')
+const { Telegraf } = require('telegraf');
+const bot = new Telegraf(process.env.token);
 
 const { userData } = require('../models/user.model');
 const { ActivityData } = require("../models/activity.model");
 const { createAuctionMsg, cancelAuctionMsg, removeAuctionMsg, processBidAuctionHelperMsg, placeBidAuctionHelperMsg } = require("../src/template.js")
 
+
 String.prototype.fmt = function (hash) {
     var string = this, key; for (key in hash) string = string.replace(new RegExp('\\{' + key + '\\}', 'gm'), hash[key]); return string
 }
+
 
 let createAuctionHelper = async (activity) => {
     // console.log(activities)
@@ -27,17 +31,30 @@ let createAuctionHelper = async (activity) => {
         }
     }).clone()
 
-    let msg = createAuctionMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id, START_DATE: activity.start_time, END_DATE: activity.end_time })
+
+    let msg = createAuctionMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id, START_DATE: activity.start_time, END_DATE: activity.end_time })
+    let mediaUrl =createAuctionMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id})
     user_chatId.forEach((chatid) => {
         console.log(user_chatId)
-        let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-        console.log("target", target)
-        https.get(target, (res) => {
-            return console.log('Auction Telegram Notification sent')
+
+        // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
+        // console.log("target", target)
+        // https.get(target, (res) => {
+        //     return console.log('Auction Telegram Notification sent')
+        // })
+
+        bot.telegram.sendMessage(chatid,msg,{
+            parse_mode:'Markdown',
+            reply_markup:{
+                inline_keyboard:[
+                    [
+                        {text:"New Auction Created",url:mediaUrl}
+                    ]
+                ]
+            }
         })
-
-
     })
+
     ActivityData.findOneAndUpdate({
         "_id": activity._id
     }, {
@@ -75,12 +92,24 @@ let cancelAuctionHelper = async (activity) => {
 
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
        
-        let msg = cancelAuctionMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
+        let msg = cancelAuctionMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
+        let mediaUrl = cancelAuctionMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
 
-        let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
-        console.log("target", target)
-        https.get(target, (res) => {
-            return console.log('Cancelled Auction Telegram Notification sent')
+        // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
+        // console.log("target", target)
+        // https.get(target, (res) => {
+        //     return console.log('Cancelled Auction Telegram Notification sent')
+        // })
+
+        bot.telegram.sendMessage(user_chatIdOwner,msg,{
+            parse_mode:'Markdown',
+            reply_markup:{
+                inline_keyboard:[
+                    [
+                        {text:"Auction Cancelled",url:mediaUrl}
+                    ]
+                ]
+            }
         })
 
         ActivityData.findOneAndUpdate({
@@ -96,46 +125,7 @@ let cancelAuctionHelper = async (activity) => {
         })
 
     }
-    // let user_chatId = []
-    // await userData.find({
-    //     "isSubscribe": true
-    // }, async (error, result) => {
-    //     if (error) {
-    //         return console.log(error)
-    //     } else if (result && result.length) {
-    //         user_chatId.splice(0,)
-    //         result.forEach(user => {
-    //             user_chatId.push(user.userId)
-    //         })
-    //     } else {
-    //         return console.log("no User subscribed")
-    //     }
-    // }).clone()
-    // console.log(user_chatId)
-    // let msg = ` ***Auction Cancelled.***
-    // **Click the below Link:**
-    // (https://omniflix.market/nft/${activity.nft_id.id})`
-    // let msg = cancelAuctionMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
-    // user_chatId.forEach((chatid) => {
-    //     let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-    //     console.log("target", target)
-    //     https.get(target, (res) => {
-    //         return console.log('Cancelled Auction Telegram Notification sent')
-    //     })
-    // })
-    // ActivityData.findOneAndUpdate({
-    //     "nftId": activity.nft_id.id,
-    //     "tx_hash": activity.tx_hash,
-    //     "id": activity.id
-    // }, {
-    //     $set: {
-    //         "isNotified": true,
-    //     }
-    // }, async (error) => {
-    //     if (error) {
-    //         return console.log(error)
-    //     }
-    // })
+   
 
 
 }
@@ -162,12 +152,24 @@ let removeAuctionHelper = async (activity) => {
     
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
        
-        let msg = removeAuctionMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
+        let msg = removeAuctionMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
+        let mediaUrl = removeAuctionMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
 
-        let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
-        console.log("target", target)
-        https.get(target, (res) => {
-            return console.log('Removed Auction Telegram Notification sent')
+        // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
+        // console.log("target", target)
+        // https.get(target, (res) => {
+        //     return console.log('Removed Auction Telegram Notification sent')
+        // })
+
+        bot.telegram.sendMessage(user_chatIdOwner,msg,{
+            parse_mode:'Markdown',
+            reply_markup:{
+                inline_keyboard:[
+                    [
+                        {text:"Auction Removed",url:mediaUrl}
+                    ]
+                ]
+            }
         })
 
         ActivityData.findOneAndUpdate({
@@ -227,14 +229,28 @@ let processBidAuctionHelper = async (activity) => {
     // console.log(user_omniflixAddressOwner, user_omniflixAddressBidder, user_chatIdOwner, user_chatIdBidder)
 
     if (user_omniflixAddressBidder != undefined && user_chatIdBidder != undefined) {
-        // let msg = ` **Congratulations**.
-        // ***You Won the Following Auction:***
-        // (https://omniflix.market/nft/${activity.nft_id.id})`
+       
         let msg = processBidAuctionHelperMsg.auctionWonMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
-        let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdBidder}&text=${msg}&parse_mode=markdown`
-        https.get(target, (res) => {
-            return console.log('Auction Won Telegram Notification sent')
+        let mediaUrl = processBidAuctionHelperMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
+
+
+
+        // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdBidder}&text=${msg}&parse_mode=markdown`
+        // https.get(target, (res) => {
+        //     return console.log('Auction Won Telegram Notification sent')
+        // })
+
+        bot.telegram.sendMessage(user_chatIdBidder,msg,{
+            parse_mode:'Markdown',
+            reply_markup:{
+                inline_keyboard:[
+                    [
+                        {text:"Auction Won",url:mediaUrl}
+                    ]
+                ]
+            }
         })
+        
         ActivityData.findOneAndUpdate({
             "_id": activity._id
         }, {
@@ -249,13 +265,26 @@ let processBidAuctionHelper = async (activity) => {
     }
 
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
-        // let msg = ` ***The Auction has Ended :***
-        // (https://omniflix.market/nft/${activity.nft_id.id})`
+        
         let msg = processBidAuctionHelperMsg.auctionEndMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
-        let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
-        https.get(target, (res) => {
-            return console.log('Auction Ended Telegram Notification sent')
+        let mediaUrl = processBidAuctionHelperMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
+
+        // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
+        // https.get(target, (res) => {
+        //     return console.log('Auction Ended Telegram Notification sent')
+        // })
+
+        bot.telegram.sendMessage(user_chatIdOwner,msg,{
+            parse_mode:'Markdown',
+            reply_markup:{
+                inline_keyboard:[
+                    [
+                        {text:"Auction Ended",url:mediaUrl}
+                    ]
+                ]
+            }
         })
+        
         ActivityData.findOneAndUpdate({
             "_id": activity._id
         }, {
@@ -309,11 +338,23 @@ let placeBidAuctionHelper = async (activity) => {
                 //             **Click the below Link:**
                 //             (https://omniflix.market/nft/${nftId})`;
                 let ownerMsg = placeBidAuctionHelperMsg.ownerMsg.fmt({ NFTID: nftId })
+                let mediaUrl = placeBidAuctionHelperMsg.url.fmt({ NFTID: nftId })
 
-                let ownerTarget = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${data.userId}&text=${ownerMsg}&parse_mode=markdown`
+                // let ownerTarget = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${data.userId}&text=${ownerMsg}&parse_mode=markdown`
 
-                https.get(ownerTarget, (res) => {
-                    console.log("Notification sent")
+                // https.get(ownerTarget, (res) => {
+                //     console.log("Notification sent")
+                // })
+
+                bot.telegram.sendMessage(data.userId,ownerMsg,{
+                    parse_mode:'Markdown',
+                    reply_markup:{
+                        inline_keyboard:[
+                            [
+                                {text:"New Bid Placed",url:mediaUrl}
+                            ]
+                        ]
+                    }
                 })
             })
 
@@ -341,10 +382,22 @@ let placeBidAuctionHelper = async (activity) => {
                 //             (https://omniflix.market/nft/${nftId})`;
 
                 let bidderMsg = placeBidAuctionHelperMsg.bidderMsg.fmt({ NFTID: nftId })
-                let bidderTarget = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${data.userId}&text=${bidderMsg}&parse_mode=markdown`
+                let mediaUrl = placeBidAuctionHelperMsg.url.fmt({ NFTID: nftId })
+                // let bidderTarget = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${data.userId}&text=${bidderMsg}&parse_mode=markdown`
 
-                https.get(bidderTarget, (res) => {
-                    console.log("Notification sent")
+                // https.get(bidderTarget, (res) => {
+                //     console.log("Notification sent")
+                // })
+
+                bot.telegram.sendMessage(data.userId,bidderMsg,{
+                    parse_mode:'Markdown',
+                    reply_markup:{
+                        inline_keyboard:[
+                            [
+                                {text:"You Placed New Bid",url:mediaUrl}
+                            ]
+                        ]
+                    }
                 })
             })
 
@@ -388,9 +441,22 @@ let placeBidAuctionHelper = async (activity) => {
                         //                 **Click the below Link**
                         //                 (https://omniflix.market/nft/${nftId})`;
                         let previousBidderMsg = placeBidAuctionHelperMsg.previousBidderMsg.fmt({ NFTID: nftId })
-                        let previousBidderTarget = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${data.userId}&text=${previousBidderMsg}&parse_mode=markdown`
-                        https.get(previousBidderTarget, (res) => {
-                            console.log("Notification sent");
+                        let mediaUrl = placeBidAuctionHelperMsg.url.fmt({ NFTID: nftId })
+
+                        // let previousBidderTarget = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${data.userId}&text=${previousBidderMsg}&parse_mode=markdown`
+                        // https.get(previousBidderTarget, (res) => {
+                        //     console.log("Notification sent");
+                        // })
+
+                        bot.telegram.sendMessage(data.userId,previousBidderMsg,{
+                            parse_mode:'Markdown',
+                            reply_markup:{
+                                inline_keyboard:[
+                                    [
+                                        {text:"Bid Overbidden",url:mediaUrl}
+                                    ]
+                                ]
+                            }
                         })
                     }
 
