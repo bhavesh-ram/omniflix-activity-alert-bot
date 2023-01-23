@@ -5,6 +5,9 @@ const { userData } = require('../models/user.model');
 const { ActivityData } = require("../models/activity.model");
 const {transferNftHelperMsg} = require("../src/template.js")
 
+const { Telegraf } = require('telegraf');
+const bot = new Telegraf(process.env.token);
+
 String.prototype.fmt = function (hash) {
     var string = this, key; for (key in hash) string = string.replace(new RegExp('\\{' + key + '\\}', 'gm'), hash[key]); return string
 }
