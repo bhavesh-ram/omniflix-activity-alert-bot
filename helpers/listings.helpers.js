@@ -31,15 +31,7 @@ let listingHelper = async (activity) => {
         let msg = listingHelperMsg.message.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id});
         let mediaUrl = listingHelperMsg.url.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id});
     user_chatId.forEach((chatid) => {
-        // setTimeout(function () {
-        //     let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-        //     // console.log("target", target)
-        //     https.get(target, (res) => {
-        //         return console.log('New Listing Telegram Notification sent')
-        //     })
-        //     // sleep(100)
-
-        // },500)
+        
         bot.telegram.sendMessage(chatid,msg,{parse_mode:'Markdown',
             reply_markup:{
                 inline_keyboard:[
@@ -86,16 +78,11 @@ let deListingHelper = async (activity) => {
     }).clone()
 
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
-        // let msg = ` *** You Delisting Following Nft From MarketPlace.***
-        // (https://omniflix.market/nft/${activity.nft_id.id})`
+        
         let msg = delistingHelperMsg.message.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id})
         let mediaUrl = delistingHelperMsg.url.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id})
 
-        // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
-        // console.log("target", target)
-        // https.get(target, (res) => {
-        //     return console.log('Delisting NFT Telegram Notification sent')
-        // })
+       
 
         bot.telegram.sendMessage(user_chatIdOwner,msg,{
             parse_mode:'Markdown',
