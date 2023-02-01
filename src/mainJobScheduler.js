@@ -70,7 +70,7 @@ let MainScheduler = async () => {
                                     console.log(error)
                                 } else if (totalCount > 3) {
 
-                                    console.log(totalCount, activity.type, activity.block, user_chatId)
+                                    // console.log(totalCount, activity.type, activity.block, user_chatId)
                                     if (activity.type == "MsgCreateAuction") {
                                         bulkAuction(activity, totalCount, user_chatId)
                                     } else if (activity.type == "MsgListNFT") {
@@ -83,7 +83,7 @@ let MainScheduler = async () => {
                                         bulkAuctionRemoved(activity, totalCount, user_chatId)
 
                                     } else if (activity.type == "MsgDeListNFT") {
-                                        bulkDeListingNft(activity, totalCount, user_chatId)
+                                        bulkDeListingNft(activity, totalCount)
 
                                     } else if (activity.type == "MsgBurnONFT") {
                                         bulkBurnNft(activity, totalCount)

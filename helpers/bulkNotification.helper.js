@@ -62,7 +62,6 @@ let bulkTransfer = async (activity, totalCount) => {
     }).clone()
 
     let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdSender}&text=${msg}&parse_mode=markdown`
-    // console.log("target", target)
     https.get(target, (res) => {
         return console.log('Bulk Mint Nft Telegram Notification sent')
     })
@@ -108,32 +107,47 @@ let bulkListingNft = async (activity, totalCount, user_chatId) => {
     }).clone()
 }
 
-let bulkDeListingNft = async (activity, totalCount, user_chatId) => {
+let bulkDeListingNft = async (activity, totalCount) => {
     let msg = `**${totalCount}** ***Nfts DeListed From MarketPlace.***`
-    user_chatId.forEach((chatid) => {
-        setTimeout(function () {
-            let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-            // console.log("target", target)
-            https.get(target, (res) => {
-                return console.log('Bulk Delisting Telegram Notification sent')
-            })
-            // sleep(100)
 
-        }, 500)
-    })
+    let user_chatIdOwner
+    let user_omniflixAddressOwner
 
-    await ActivityData.updateMany({
-        type: activity.type,
-        block: activity.block
-    }, {
-        $set: {
-            "isNotified": true,
-        }
-    }, async (error) => {
+    await userData.findOne({
+        "isSubscribe": true,
+        "omniflixAddress": activity.owner
+    }, async (error, result) => {
         if (error) {
             return console.log(error)
+        } else if (result) {
+            user_chatIdOwner = result.userId
+            user_omniflixAddressOwner = result.omniflixAddress
+
+        } else {
+            return console.log("DeListing NFT user not subscribed")
         }
     }).clone()
+
+    if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
+        let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
+        https.get(target, (res) => {
+            return console.log('Bulk Delisting Telegram Notification sent')
+        })
+
+
+        await ActivityData.updateMany({
+            type: activity.type,
+            block: activity.block
+        }, {
+            $set: {
+                "isNotified": true,
+            }
+        }, async (error) => {
+            if (error) {
+                return console.log(error)
+            }
+        }).clone()
+    }
 }
 
 let bulkBurnNft = async (activity, totalCount) => {
@@ -156,7 +170,6 @@ let bulkBurnNft = async (activity, totalCount) => {
         }
     }).clone()
     let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdCreator}&text=${msg}&parse_mode=markdown`
-    // console.log("target", target)
     https.get(target, (res) => {
         return console.log('Bulk Burn Nft Telegram Notification sent')
     })
@@ -182,7 +195,6 @@ let bulkAuction = async (activity, totalCount, user_chatId) => {
         console.time("test")
         setTimeout(function () {
             let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-            // console.log("target", target)
             https.get(target, (res) => {
                 return console.log('New Bulk Auction Telegram Notification sent')
             })
@@ -213,7 +225,6 @@ let bulkAuctionCancel = async (activity, totalCount, user_chatId) => {
             https.get(target, (res) => {
                 return console.log('Bulk Auction Cancel Telegram Notification sent')
             })
-            // sleep(100)
 
         }, 500)
     })
@@ -237,11 +248,9 @@ let bulkAuctionRemoved = async (activity, totalCount, user_chatId) => {
     user_chatId.forEach((chatid) => {
         setTimeout(function () {
             let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-            // console.log("target", target)
             https.get(target, (res) => {
                 return console.log('New Bulk Listing Telegram Notification sent')
             })
-            // sleep(100)
 
         }, 500)
     })
@@ -281,7 +290,6 @@ let bulkProcessBid = async (activity, totalCount) => {
     }).clone()
 
     let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdBidder}&text=${msg}&parse_mode=markdown`
-    // console.log("target", target)
     https.get(target, (res) => {
         return console.log('Bulk Mint Nft Telegram Notification sent')
     })
@@ -319,7 +327,6 @@ let bulkPlaceBid = async (activity, totalCount) => {
         }
     }).clone()
     let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdBidder}&text=${msg}&parse_mode=markdown`
-    // console.log("target", target)
     https.get(target, (res) => {
         return console.log('Bulk Mint Nft Telegram Notification sent')
     })
@@ -358,7 +365,7 @@ let bulkBuyNft = async (activity, totalCount) => {
     }).clone()
 
     let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdBuyer}&text=${msg}&parse_mode=markdown`
-    // console.log("target", target)
+    
     https.get(target, (res) => {
         return console.log('Bulk Buy Nft Telegram Notification sent')
     })
@@ -398,7 +405,7 @@ let bulkTransferCollection = async (activity, totalCount) => {
     }).clone()
 
     let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdCreator}&text=${msg}&parse_mode=markdown`
-    // console.log("target", target)
+    
     https.get(target, (res) => {
         return console.log('Bulk Transfer Collection Telegram Notification sent')
     })
@@ -438,7 +445,7 @@ let bulkUpdateCollection = async (activity, totalCount) => {
     }).clone()
 
     let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdCreator}&text=${msg}&parse_mode=markdown`
-    // console.log("target", target)
+    
     https.get(target, (res) => {
         return console.log('Bulk Collection Update Telegram Notification sent')
     })

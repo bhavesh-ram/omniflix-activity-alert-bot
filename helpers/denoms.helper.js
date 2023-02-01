@@ -12,16 +12,11 @@ String.prototype.fmt = function (hash) {
 let transferDenomHelper = async (activity) => {
     try {
 
-
-        // console.log("transferDenomHelper");
-        // let id = activity;
         let id = activity._id;
         let activityData = await ActivityData.findOne({ _id: id });
         if (!activityData) {
             console.log("Acitivity not found");
         }
-
-
 
         let creatorData = await userData.find({
             isSubscribe: true,
@@ -29,7 +24,6 @@ let transferDenomHelper = async (activity) => {
 
         })
 
-        // owner is receipent in this context
         let ownerData = await userData.find({
             isSubscribe: true,
             omniflixAddress: activityData.recipient
@@ -39,14 +33,9 @@ let transferDenomHelper = async (activity) => {
 
         if (creatorData.length) {
             creatorData.forEach((data) => {
-                // let msg = `You have transferred this collection to ${activityData.recipient} %0A(https://omniflix.market/collection/${denomId})`;
                 let msg = transferDenomHelperMsg.senderMsg.fmt({ DENOMID:denomId,ACTIVITYDATARECIPIENT:activityData.recipient})
                 let mediaUrl = transferDenomHelperMsg.url.fmt({ DENOMID:denomId})
                 let userId = data.userId;
-                // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${userId}&text=${msg}&parse_mode=markdown`
-                // https.get(target, (res) => {
-                //     console.log("Notification sent");
-                // })
 
                 bot.telegram.sendMessage(userId,msg,{
                     parse_mode:'Markdown',
@@ -73,14 +62,9 @@ let transferDenomHelper = async (activity) => {
 
         if (ownerData.length) {
             ownerData.forEach((data) => {
-                // let msg = `You have received the below collection from %0A${activityData.creator} %0A(https://omniflix.market/collection/${denomId})`;
                 let msg = transferDenomHelperMsg.receiverMsg.fmt({ DENOMID:denomId,ACTIVITYDATACREATOR:activityData.creator})
                 let mediaUrl = transferDenomHelperMsg.url.fmt({ DENOMID:denomId})
                 let userId = data.userId;
-                // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${userId}&text=${msg}&parse_mode=markdown`
-                // https.get(target, (res) => {
-                //     console.log("Notification sent");
-                // })
 
                 bot.telegram.sendMessage(userId,msg,{
                     parse_mode:'Markdown',
@@ -120,7 +104,7 @@ let updateDenomHelper = async (activity) => {
     try {
         console.log("updateDenomHelper working ")
         let id = activity._id;
-        // let id = activity;
+
         let activityData = await ActivityData.findOne({ _id: id });
         if (!activityData) {
             console.log("Acitivity not found");
@@ -135,26 +119,13 @@ let updateDenomHelper = async (activity) => {
 
         let symbol = activityData.symbol;
         let name = activityData.name;
-        // let description = activityData.description;
-
-        // console.log(ownerData)
-
-
-
+    
         if (ownerData.length) {
 
             ownerData.forEach((data) => {
 
-
-
-                // let ownerMsg = `Your collection has been updated  %0ASymbol: ${symbol} %0AName: ${name} %0AClick this link to check: (https://omniflix.market/collection/${denomId})`;
                 let ownerMsg = updateDenomHelperMsg.message.fmt({SYMBOL:symbol,NAME:name, DENOMID:denomId})
                 let mediaUrl = updateDenomHelperMsg.url.fmt({DENOMID:denomId})
-                // let ownerTarget = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${data.userId}&text=${ownerMsg}&parse_mode=markdown`
-
-                // https.get(ownerTarget, (res) => {
-                //     console.log("Notification sent")
-                // })
 
                 bot.telegram.sendMessage(data.userId,ownerMsg,{
                     parse_mode:'Markdown',

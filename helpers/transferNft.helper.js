@@ -14,7 +14,6 @@ String.prototype.fmt = function (hash) {
 
 
 let transferNftHelper = async (activity) => {
-    // console.log(activity)
     let user_chatIdSender
     let user_omniflixAddressSender
     let user_chatIdRecipient
@@ -51,14 +50,9 @@ let transferNftHelper = async (activity) => {
 
 
     if(user_omniflixAddressSender !=undefined && user_chatIdSender != undefined){
-        // let msg = ` ***You Transferred Nft.*** 
-        // (https://omniflix.market/nft/${activity.id})`
+    
         let msg = transferNftHelperMsg.senderMsg.fmt({ ACTIVITYID:activity.id})
         let mediaUrl = transferNftHelperMsg.url.fmt({ ACTIVITYID:activity.id})
-        // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdSender}&text=${msg}&parse_mode=markdown`
-        // https.get(target, (res) => {
-        //     return console.log('Transferred Nft Telegram Notification sent')
-        // })
 
         bot.telegram.sendMessage(user_chatIdSender,msg,{
             parse_mode:'Markdown',
@@ -85,14 +79,9 @@ let transferNftHelper = async (activity) => {
     }
 
     if(user_chatIdRecipient != undefined && user_omniflixAddressRecipient != undefined){
-        // let msg = ` ***You Receved New NFT In your Account*** 
-        // (https://omniflix.market/nft/${activity.id})`
+       
         let msg = transferNftHelperMsg.receiverMsg.fmt({ ACTIVITYID:activity.id})
         let mediaUrl = transferNftHelperMsg.url.fmt({ ACTIVITYID:activity.id})
-        // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdRecipient}&text=${msg}&parse_mode=markdown`
-        // https.get(target, (res) => {
-        //     return console.log('Nft Received Telegram Notification sent')
-        // })
 
         bot.telegram.sendMessage(user_chatIdRecipient,msg,{
             parse_mode:'Markdown',
