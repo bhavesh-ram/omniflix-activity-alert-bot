@@ -97,6 +97,21 @@ let messageCMD = async (ctx) => {
 
         }
         console.timeEnd(`Processing update ${ctx.update.message.update_id}`);
+    } else {
+        let words = ['chihuahua', 'mantle', 'cosmos', 'osmo', 'secret', 'akash', 'star', 'certik', 'regen', 'persistence', 'sent', 'juno', 'kava', 'stars']
+        let str = ctx.message.text
+        let found = false;
+        for (const word of words) {
+            const index = str.indexOf(word);
+            if (index !== -1) {
+                await ctx.reply('Add a correct OmniFlix address for accurate updates.')
+                found = true;
+                break;
+            }
+        }
+        // if (!found) {
+        //     console.log("None of the words in the array are Not present in the string");
+        // }
     }
 }
 
