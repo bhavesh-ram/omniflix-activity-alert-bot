@@ -3,7 +3,7 @@ const dotenv = require('dotenv').config()
 const connectDB = require("./config/db");
 
 const { HelpMsg,StartMsg, joinBot,aboutBot, aboutOmniflix } = require('./src/template');
-const {  messageCMD } = require('./src/subscribe');
+const { subscribeCMD } = require('./src/subscribe');
 const { unSubscribeCMD } = require('./src/unsubscribe');
 // uncomment this to fetch data
 
@@ -46,23 +46,12 @@ bot.command('help',async (ctx) =>{
    await ctx.reply(HelpMsg) 
    console.timeEnd(`Processing update ${ctx.update.message.update_id}`);
 })
-// bot.command('subscribe',subscribeCMD);
+bot.command('subscribe',subscribeCMD);
   
 bot.command('unsubscribe',unSubscribeCMD)
 
-bot.command('subscribe', (ctx) => {
-    ctx.reply('Send your OmniFlix account address')
-  })
-  
-bot.on('message', messageCMD )
 bot.launch();
 console.log("App is running")
-
-
-
-
-
-
 
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));

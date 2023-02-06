@@ -1,7 +1,5 @@
 const dotenv = require('dotenv').config()
 const https = require('https')
-// const date =require('date-and-time');
-
 
 const { userData } = require('../models/user.model');
 const { ActivityData } = require("../models/activity.model");
@@ -29,7 +27,7 @@ let listingHelper = async (activity) => {
             return console.log("no User subscribed")
         }
     }).clone()
-    // console.log(date.format(activity.created_at, 'ddd MMM YYYY at SS:SS [UTC]'))
+   
         let msg = listingHelperMsg.message.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id});
         let mediaUrl = listingHelperMsg.url.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id});
     user_chatId.forEach((chatid) => {

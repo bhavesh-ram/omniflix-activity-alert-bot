@@ -18,7 +18,7 @@ let unSubscribeCMD = async (ctx) => {
     })
     // console.log(result)
     if (result) {
-        await ctx.reply("You've unsubscribed. But don't worry, we'll be here if you change your mind.")
+        await ctx.reply('You Have UnSubscribed SuccessFully ')
     } else {
         await ctx.reply('Error While Deleting User!')
     }

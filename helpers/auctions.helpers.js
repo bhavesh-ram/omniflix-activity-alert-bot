@@ -2,7 +2,6 @@ const dotenv = require('dotenv').config()
 const https = require('https')
 const { Telegraf } = require('telegraf');
 const bot = new Telegraf(process.env.token);
-const date =require('date-and-time');
 
 const { userData } = require('../models/user.model');
 const { ActivityData } = require("../models/activity.model");
@@ -32,8 +31,8 @@ let createAuctionHelper = async (activity) => {
         }
     }).clone()
 
-    
-    let msg = createAuctionMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id, START_DATE: date.format(activity.start_time, 'ddd MMM YYYY at SS:SS [UTC]'), END_DATE: date.format(activity.end_time, 'ddd MMM YYYY at SS:SS [UTC]') })
+
+    let msg = createAuctionMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id, START_DATE: activity.start_time, END_DATE: activity.end_time })
     let mediaUrl =createAuctionMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id})
     user_chatId.forEach((chatid) => {
         console.log(user_chatId)
