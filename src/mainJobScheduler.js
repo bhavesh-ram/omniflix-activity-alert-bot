@@ -70,7 +70,6 @@ let MainScheduler = async () => {
                                     console.log(error)
                                 } else if (totalCount > 3) {
 
-                                    // console.log(totalCount, activity.type, activity.block, user_chatId)
                                     if (activity.type == "MsgCreateAuction") {
                                         bulkAuction(activity, totalCount, user_chatId)
                                     } else if (activity.type == "MsgListNFT") {
