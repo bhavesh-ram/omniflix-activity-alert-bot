@@ -5,21 +5,19 @@ let HelpMsg =
     HERE ARE THE AVAILABLE COMMANDS AND THEIR UTILITY
      /about - About Bot
      /omniflix - About OmniFlix
-	   /subscribe - subscribe to OmniFlix Alert Bot to get Marketplace updates.(Note:-Add OmniFlix address after subscribe \ni.e. /subscribe omniflix1rtwjj6qfn62emyghhgfhhtjedv3kgd9j20tx)
+	   /subscribe - Subscribe to get the latest NFTs, Auctions, and Collection listings notifications in your inbox.
 	   /unsubscribe - unsubscribe from Alerts/Updates
      /join - join bot and subscribe to get personal updates of Marketplace
      `
-let aboutBot = `This is a bot to help you navigate and receive notifications from the marketplace within the OmniFlix ecosystem`
-let aboutOmniflix = `OmniFlix is a p2p network for creators & sovereign communities to help them mint, manage, distribute and monetise their intellectual property and community interactions.`
-let joinBot = `connect the bot to get personal message. Click the link below.\n@OmniFlix_Alert_bot\nand type /help or /subscribe.\nGet all updates`
+let aboutBot = `OmniFlix Alert bot helps you get notifications for Auctions, Collections & more on OmniFlix.Market - all in one place.`
+let aboutOmniflix = `OmniFlix is a p2p network for creators & sovereign communities to Mint, manage, distribute and monetize their Intellectual Property and community interactions.`
+let joinBot = `Get in on the NFT action!\nConnect @OmniFlix_Alert_bot to your telegram with the link below.\nType /help or "/subscribe" to finish setup.`
 
 let createAuctionMsg = {
-  message: `***New Auction Listed On MarketPlace***  
-https://omniflix.market/nft/{ACTIVITYNFT_IDID}  
-The Auction is Starting at:  
-***{START_DATE}***  
-And The Auction is Ending at:  
-***{END_DATE}***`,
+  message: `***New NFT Auction! Bid now on OmniFlix.Market***  
+Starts:***{START_DATE}***  
+Ends:***{END_DATE}***   
+https://omniflix.market/nft/{ACTIVITYNFT_IDID}`,
   url: `https://omniflix.market/nft/{ACTIVITYNFT_IDID} `
 };
 
@@ -122,7 +120,7 @@ https://omniflix.market/collection/{DENOMID}`,
 
 
 let listingHelperMsg = {
-  message: ` ***New listing on the marketplace on OmniFlix.market.***  
+  message: ` ***Alert 🚨 Fresh listing on OmniFlix.market !***  
 https://omniflix.market/nft/{ACTIVITYNFT_IDID}`,
 
   url: `https://omniflix.market/nft/{ACTIVITYNFT_IDID}`
