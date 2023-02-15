@@ -56,6 +56,7 @@ const { userData } = require("../models/user.model")
 
 let messageCMD = async (ctx) => {
     console.time(`Processing update ${ctx.update.message.update_id}`);
+    let words = ['chihuahua', 'mantle', 'cosmos', 'osmo', 'secret', 'akash', 'star', 'certik', 'regen', 'persistence', 'sent', 'juno', 'kava', 'stars']
     if (ctx.message.text == '/help' ||
         ctx.message.text == '/omniflix' ||
         ctx.message.text == '/about' ||
@@ -64,7 +65,9 @@ let messageCMD = async (ctx) => {
         ctx.message.text == '/subscribe') {
         console.log(ctx.message.text)
 
-    } else if (ctx.message.text.slice(0, 8) == 'omniflix') {
+    }else if(!words.includes(ctx.message.text) && !ctx.message.text){
+        // console.log(ctx.message.text)
+    }else if (ctx.message.text.slice(0, 8) == 'omniflix') {
         if (parseInt(ctx.message.text.slice(8,).length) != 39) {
             return await ctx.reply('Add a correct OmniFlix address for accurate updates.')
         }
@@ -97,8 +100,8 @@ let messageCMD = async (ctx) => {
 
         }
         console.timeEnd(`Processing update ${ctx.update.message.update_id}`);
-    } else {
-        let words = ['chihuahua', 'mantle', 'cosmos', 'osmo', 'secret', 'akash', 'star', 'certik', 'regen', 'persistence', 'sent', 'juno', 'kava', 'stars']
+    }else {
+        
         let str = ctx.message.text
         let found = false;
         for (const word of words) {
