@@ -108,6 +108,14 @@ https://omniflix.market/collection/{DENOMID}`,
 
 }
 
+let createDenomHelperMsg = {
+  message: `***Your collection has been created.***  
+**Symbol:  {SYMBOL}**  
+**Name:  {NAME} **  
+https://omniflix.market/collection/{DENOMID}`,
+
+  url: `https://omniflix.market/collection/{DENOMID}`
+}
 
 let updateDenomHelperMsg = {
   message: `***Your collection has been updated.***  
@@ -163,6 +171,7 @@ module.exports = {
   burnNftHelperMsg,
 
   mintONFTHelperMsg,
+  createDenomHelperMsg,
   transferDenomHelperMsg,
   updateDenomHelperMsg,
   listingHelperMsg,

@@ -18,7 +18,17 @@ var userSchema = mongoose.Schema({
     },
     chatDate:{
         type:Date,   
-    }
+    },
+    notificationTypes: {
+        type: [String],
+        enum: [
+            'Create Auction',
+            'List NFT',
+            'Bulk Listing',
+            'Bulk Create Auction'
+          ],
+        default: [], // Default to an empty array for notification types
+      },
     
 }, { timestamps: true });
 

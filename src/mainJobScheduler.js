@@ -6,10 +6,10 @@ const { createAuctionHelper, cancelAuctionHelper, removeAuctionHelper, processBi
 const { listingHelper, deListingHelper } = require("../helpers/listings.helpers");
 const { transferNftHelper } = require("../helpers/transferNft.helper");
 const { buyNftHelper, burnNftHelper, mintONFTHelper } = require("../helpers/buyNfts.helpers");
-const { updateDenomHelper, transferDenomHelper } = require("../helpers/denoms.helper");
+const { updateDenomHelper, transferDenomHelper, createDenomHelper } = require("../helpers/denoms.helper");
 const https = require('https')
 const { userData } = require('../models/user.model');
-const { bulkAuction, bulkListingNft, bulkAuctionCancel, bulkAuctionRemoved, bulkDeListingNft, bulkBurnNft, bulkMinting, bulkTransfer, bulkProcessBid, bulkPlaceBid, bulkBuyNft, bulkUpdateCollection, bulkTransferCollection } = require("../helpers/bulkNotification.helper");
+const { bulkAuction, bulkListingNft, bulkAuctionCancel, bulkAuctionRemoved, bulkDeListingNft, bulkBurnNft, bulkMinting, bulkTransfer, bulkProcessBid, bulkPlaceBid, bulkBuyNft, bulkUpdateCollection, bulkTransferCollection, bulkCreateCollection } = require("../helpers/bulkNotification.helper");
 
 
 
@@ -71,15 +71,15 @@ let MainScheduler = async () => {
                                 } else if (totalCount > 3) {
 
                                     if (activity.type == "MsgCreateAuction") {
-                                        bulkAuction(activity, totalCount, user_chatId)
+                                        bulkAuction(activity, totalCount)
                                     } else if (activity.type == "MsgListNFT") {
-                                        bulkListingNft(activity, totalCount, user_chatId)
+                                        bulkListingNft(activity, totalCount)
 
                                     } else if (activity.type == "MsgCancelAuction") {
-                                        bulkAuctionCancel(activity, totalCount, user_chatId)
+                                        bulkAuctionCancel(activity, totalCount)
 
                                     } else if (activity.type == "RemoveAuction") {
-                                        bulkAuctionRemoved(activity, totalCount, user_chatId)
+                                        bulkAuctionRemoved(activity, totalCount)
 
                                     } else if (activity.type == "MsgDeListNFT") {
                                         bulkDeListingNft(activity, totalCount)
@@ -102,6 +102,9 @@ let MainScheduler = async () => {
 
                                     } else if (activity.type == "MsgBuyNFT") {
                                         bulkBuyNft(activity, totalCount)
+
+                                    } else if (activity.type == "MsgCreateDenom") {
+                                        bulkCreateCollection(activity, totalCount)
 
                                     } else if (activity.type == "MsgUpdateDenom") {
                                         bulkUpdateCollection(activity, totalCount)
@@ -135,6 +138,8 @@ let MainScheduler = async () => {
                                                 deListingHelper(activity)
                                             } else if (activity.type == "MsgBurnONFT") {
                                                 burnNftHelper(activity)
+                                            } else if (activity.type == "MsgCreateDenom") {
+                                                createDenomHelper(activity)
                                             } else if (activity.type == "MsgUpdateDenom") {
                                                 updateDenomHelper(activity)
                                             } else if (activity.type == "MsgTransferDenom") {
@@ -167,6 +172,8 @@ let MainScheduler = async () => {
                                             deListingHelper(activity)
                                         } else if (activity.type == "MsgBurnONFT") {
                                             burnNftHelper(activity)
+                                        } else if (activity.type == "MsgCreateDenom") {
+                                            createDenomHelper(activity)
                                         } else if (activity.type == "MsgUpdateDenom") {
                                             updateDenomHelper(activity)
                                         } else if (activity.type == "MsgTransferDenom") {
