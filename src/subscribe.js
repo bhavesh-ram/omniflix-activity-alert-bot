@@ -62,7 +62,8 @@ let messageCMD = async (ctx) => {
         ctx.message.text == '/about' ||
         ctx.message.text == '/start' ||
         ctx.message.text == '/join' ||
-        ctx.message.text == '/subscribe') {
+        ctx.message.text == '/subscribe'||
+        ctx.message.text == '/unsubscribe') {
         console.log(ctx.message.text)
 
     }else if(!words.includes(ctx.message.text) && !ctx.message.text){

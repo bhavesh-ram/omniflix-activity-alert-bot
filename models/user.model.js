@@ -18,6 +18,10 @@ var userSchema = mongoose.Schema({
     },
     chatDate:{
         type:Date,   
+    },
+    isListingNotified: {
+        type: Boolean,
+        default: true,
     }
     
 }, { timestamps: true });

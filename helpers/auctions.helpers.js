@@ -38,12 +38,6 @@ let createAuctionHelper = async (activity) => {
     user_chatId.forEach((chatid) => {
         console.log(user_chatId)
 
-        // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-        // console.log("target", target)
-        // https.get(target, (res) => {
-        //     return console.log('Auction Telegram Notification sent')
-        // })
-
         bot.telegram.sendMessage(chatid,msg,{
             parse_mode:'Markdown',
             reply_markup:{

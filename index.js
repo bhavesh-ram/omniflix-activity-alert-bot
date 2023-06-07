@@ -9,6 +9,7 @@ const { unSubscribeCMD } = require('./src/unsubscribe');
 
 const { mainSchedulerData } = require('./src/mainJobScheduler');
 const { activityFetch } = require('./src/activityFetching');
+const { subscribeListing, unSubscribeListing } = require('./src/subscribeUnsucscribeListing');
 
 String.prototype.fmt = function (hash) {
     var string = this, key; for (key in hash) string = string.replace(new RegExp('\\{' + key + '\\}', 'gm'), hash[key]); return string
@@ -47,7 +48,8 @@ bot.command('help',async (ctx) =>{
    console.timeEnd(`Processing update ${ctx.update.message.update_id}`);
 })
 // bot.command('subscribe',subscribeCMD);
-  
+bot.command('subscribeListing',subscribeListing)  
+bot.command('unsubscribeListing',unSubscribeListing) 
 bot.command('unsubscribe',unSubscribeCMD)
 
 bot.command('subscribe', (ctx) => {

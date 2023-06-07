@@ -16,7 +16,8 @@ String.prototype.fmt = function (hash) {
 let listingHelper = async (activity) => {
     let user_chatId = []
     await userData.find({
-        "isSubscribe": true
+        "isSubscribe": true,
+        "isListingNotified": true,
     }, async (error, result) => {
         if (error) {
             return console.log(error)
