@@ -9,6 +9,7 @@ const { unSubscribeCMD } = require('./src/unsubscribe');
 
 const { mainSchedulerData } = require('./src/mainJobScheduler');
 const { activityFetch } = require('./src/activityFetching');
+const { notificationNotIntrestedIn, toggleHandler, notificationIntrestedIn } = require('./src/notificationNotIntrestedIn');
 
 String.prototype.fmt = function (hash) {
     var string = this, key; for (key in hash) string = string.replace(new RegExp('\\{' + key + '\\}', 'gm'), hash[key]); return string
@@ -27,7 +28,7 @@ bot.command('start',async (ctx) =>{
 })
 bot.command('about',async (ctx) =>{
     console.time(`Processing update ${ctx.update.message.update_id}`);
-    // console.log(ctx)
+
    await ctx.reply(aboutBot) 
    console.timeEnd(`Processing update ${ctx.update.message.update_id}`);
 })
@@ -46,27 +47,22 @@ bot.command('help',async (ctx) =>{
    await ctx.reply(HelpMsg) 
    console.timeEnd(`Processing update ${ctx.update.message.update_id}`);
 })
-// bot.command('subscribe',subscribeCMD);
   
 bot.command('unsubscribe',unSubscribeCMD)
 
 bot.command('subscribe', (ctx) => {
     ctx.reply('Send your OmniFlix account address')
   })
+bot.command('notinterested', notificationNotIntrestedIn);
+bot.command('interested', notificationIntrestedIn);
+
+bot.action(/toggle_.+/, toggleHandler)
   
 bot.on('message', messageCMD )
+
+
 bot.launch();
 console.log("App is running")
-
-
-
-
-
-
-
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
-
-
-  

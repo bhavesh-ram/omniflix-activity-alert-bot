@@ -1,12 +1,13 @@
 const { ActivityData } = require("../models/activity.model");
 const { userData } = require('../models/user.model');
-const dotenv = require('dotenv').config()
-const https = require('https')
+const { Telegraf } = require('telegraf');
+const bot = new Telegraf(process.env.token);
+
 
 let bulkMinting = async (activity, totalCount) => {
     let msg = `***You Minted **${totalCount}** Nfts.***`
     let user_chatIdCreator
-    let user_omniflixAddressCreator
+
     await userData.findOne({
         "isSubscribe": true,
         "omniflixAddress": activity.creator
@@ -15,17 +16,28 @@ let bulkMinting = async (activity, totalCount) => {
             return console.log(error)
         } else if (result) {
             user_chatIdCreator = result.userId
-            user_omniflixAddressCreator = result.omniflixAddress
+            try {
+                bot.telegram.sendMessage(user_chatIdCreator, msg, {
+                    parse_mode: 'Markdown'
+                })
+            } catch (e) {
+                if (e.response && e.response.error_code === 403) {
+                    console.log('Bot was blocked by the user');
+                    await User.findOneAndUpdate({
+                        userId: user_chatIdCreator
+                    }, {
+                        $set: { isSubscribe: false }
+                    })
+                } else {
+                    throw e;
+                }
+            }
         } else {
             return console.log("Bulk Mint Nft Owner Not subscribed")
         }
     }).clone()
 
-    let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdCreator}&text=${msg}&parse_mode=markdown`
-    console.log("target", target)
-    https.get(target, (res) => {
-        return console.log('Bulk Mint Nft Telegram Notification sent')
-    })
+
 
     await ActivityData.updateMany({
         type: activity.type,
@@ -45,7 +57,6 @@ let bulkTransfer = async (activity, totalCount) => {
     let msg = `***You Transfered **${totalCount}** Nfts.***`
 
     let user_chatIdSender
-    let user_omniflixAddressSender
 
     await userData.findOne({
         "isSubscribe": true,
@@ -55,16 +66,26 @@ let bulkTransfer = async (activity, totalCount) => {
             return console.log(error)
         } else if (result) {
             user_chatIdSender = result.userId
-            user_omniflixAddressSender = result.omniflixAddress
+            try {
+                bot.telegram.sendMessage(user_chatIdSender, msg, {
+                    parse_mode: 'Markdown',
+                })
+            } catch (e) {
+                if (e.response && e.response.error_code === 403) {
+                    console.log('Bot was blocked by the user');
+                    await User.findOneAndUpdate({
+                        userId: user_chatIdSender
+                    }, {
+                        $set: { isSubscribe: false }
+                    })
+                } else {
+                    throw e;
+                }
+            }
         } else {
             return console.log("Transfer Nft Owner Not subscribed")
         }
     }).clone()
-
-    let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdSender}&text=${msg}&parse_mode=markdown`
-    https.get(target, (res) => {
-        return console.log('Bulk Mint Nft Telegram Notification sent')
-    })
 
     await ActivityData.updateMany({
         type: activity.type,
@@ -80,18 +101,50 @@ let bulkTransfer = async (activity, totalCount) => {
     }).clone()
 }
 
-let bulkListingNft = async (activity, totalCount, user_chatId) => {
-    let msg = `**${totalCount}** ***New Listings On MarketPlace.***  https://omniflix.market/nft`
-    user_chatId.forEach((chatid) => {
-        setTimeout(function () {
-            let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-            console.log("target", target)
-            https.get(target, (res) => {
-                return console.log('New Bulk Listing Telegram Notification sent')
+let bulkListingNft = async (activity, totalCount) => {
+    let msg = `**${totalCount}** ***New Listings On MarketPlace.***  https://omniflix.market/marketplace/collectNow`
+    
+    let messageType;
+    if(activity.type === 'MsgListNFT') {
+        messageType = 'Bulk Listing';
+    }
+    // console.log(activities)
+    let user_chatId = []
+    await userData.find({
+        "isSubscribe": true,
+        notificationTypes: { $ne: messageType }
+    }, async (error, result) => {
+        if (error) {
+            return console.log(error)
+        } else if (result && result.length) {
+            user_chatId.splice(0,)
+            result.forEach(user => {
+                user_chatId.push(user.userId)
             })
-
-        }, 500)
+        } else {
+            return console.log("no User subscribed")
+        }
+    }).clone()
+    // console.log(user_chatId)
+    user_chatId.forEach(async (chatid) => {
+        try {
+            bot.telegram.sendMessage(chatid, msg, {
+                parse_mode: 'Markdown'
+            })
+        } catch (e) {
+            if (e.response && e.response.error_code === 403) {
+                console.log('Bot was blocked by the user');
+                await User.findOneAndUpdate({
+                    userId: chatid
+                }, {
+                    $set: { isSubscribe: false }
+                })
+            } else {
+                throw e;
+            }
+        }
     })
+
 
     await ActivityData.updateMany({
         type: activity.type,
@@ -129,12 +182,23 @@ let bulkDeListingNft = async (activity, totalCount) => {
     }).clone()
 
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
-        let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
-        https.get(target, (res) => {
-            return console.log('Bulk Delisting Telegram Notification sent')
-        })
 
-
+        try {
+            bot.telegram.sendMessage(user_chatIdOwner, msg, {
+                parse_mode: 'Markdown'
+            })
+        } catch (e) {
+            if (e.response && e.response.error_code === 403) {
+                console.log('Bot was blocked by the user');
+                await User.findOneAndUpdate({
+                    userId: user_chatIdOwner
+                }, {
+                    $set: { isSubscribe: false }
+                })
+            } else {
+                throw e;
+            }
+        }
         await ActivityData.updateMany({
             type: activity.type,
             block: activity.block
@@ -154,7 +218,6 @@ let bulkBurnNft = async (activity, totalCount) => {
     let msg = `***You Burned **${totalCount}** Nfts.***`
 
     let user_chatIdCreator
-    let user_omniflixAddressCreator
 
     await userData.findOne({
         "isSubscribe": true,
@@ -164,15 +227,27 @@ let bulkBurnNft = async (activity, totalCount) => {
             return console.log(error)
         } else if (result) {
             user_chatIdCreator = result.userId
-            user_omniflixAddressCreator = result.omniflixAddress
+            try {
+                bot.telegram.sendMessage(user_chatIdCreator, msg, {
+                    parse_mode: 'Markdown'
+                })
+            } catch (e) {
+                if (e.response && e.response.error_code === 403) {
+                    console.log('Bot was blocked by the user');
+                    await User.findOneAndUpdate({
+                        userId: user_chatIdCreator
+                    }, {
+                        $set: { isSubscribe: false }
+                    })
+                } else {
+                    throw e;
+                }
+            }
         } else {
             return console.log("Bulk Burn Nft Owner Not subscribed")
         }
     }).clone()
-    let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdCreator}&text=${msg}&parse_mode=markdown`
-    https.get(target, (res) => {
-        return console.log('Bulk Burn Nft Telegram Notification sent')
-    })
+
 
     await ActivityData.updateMany({
         type: activity.type,
@@ -188,18 +263,46 @@ let bulkBurnNft = async (activity, totalCount) => {
     }).clone()
 }
 
-let bulkAuction = async (activity, totalCount, user_chatId) => {
+let bulkAuction = async (activity, totalCount) => {
     let msg = ` **${totalCount}** ***New Bulk Auction Listed On MarketPlace.***  https://omniflix.market/nft`
-
-    user_chatId.forEach((chatid) => {
-        console.time("test")
-        setTimeout(function () {
-            let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-            https.get(target, (res) => {
-                return console.log('New Bulk Auction Telegram Notification sent')
+    let messageType;
+    if(activity.type === 'MsgCreateAuction') {
+        messageType = 'Bulk Create Auction';
+    }
+    // console.log(activities)
+    let user_chatId = []
+    await userData.find({
+        "isSubscribe": true,
+        notificationTypes: { $ne: messageType }
+    }, async (error, result) => {
+        if (error) {
+            return console.log(error)
+        } else if (result && result.length) {
+            user_chatId.splice(0,)
+            result.forEach(user => {
+                user_chatId.push(user.userId)
             })
-        }, 500)
-        console.timeEnd("test")
+        } else {
+            return console.log("no User subscribed")
+        }
+    }).clone()
+    user_chatId.forEach(async (chatid) => {
+        try {
+            bot.telegram.sendMessage(chatid, msg, {
+                parse_mode: 'Markdown'
+            })
+        } catch (e) {
+            if (e.response && e.response.error_code === 403) {
+                console.log('Bot was blocked by the user');
+                await User.findOneAndUpdate({
+                    userId: chatid
+                }, {
+                    $set: { isSubscribe: false }
+                })
+            } else {
+                throw e;
+            }
+        }
     })
 
     await ActivityData.updateMany({
@@ -218,16 +321,35 @@ let bulkAuction = async (activity, totalCount, user_chatId) => {
 
 let bulkAuctionCancel = async (activity, totalCount, user_chatId) => {
     let msg = `**${totalCount}** *** Auction Cancel From MarketPlace.***`
-    user_chatId.forEach((chatid) => {
-        setTimeout(function () {
-            let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-            console.log("target", target)
-            https.get(target, (res) => {
-                return console.log('Bulk Auction Cancel Telegram Notification sent')
-            })
 
-        }, 500)
-    })
+    await userData.findOne({
+        "isSubscribe": true,
+        "omniflixAddress": activity.owner
+    }, async (error, result) => {
+        if (error) {
+            return console.log(error)
+        } else if (result) {
+            let user_chatIdOwner = result.userId
+            try {
+                bot.telegram.sendMessage(user_chatIdOwner, msg, {
+                    parse_mode: 'Markdown'
+                })
+            } catch (e) {
+                if (e.response && e.response.error_code === 403) {
+                    console.log('Bot was blocked by the user');
+                    await User.findOneAndUpdate({
+                        userId: user_chatIdOwner
+                    }, {
+                        $set: { isSubscribe: false }
+                    })
+                } else {
+                    throw e;
+                }
+            }
+        } else {
+            return console.log("Bulk Process Bid Nft Owner Not subscribed")
+        }
+    }).clone()
 
     await ActivityData.updateMany({
         type: activity.type,
@@ -245,15 +367,36 @@ let bulkAuctionCancel = async (activity, totalCount, user_chatId) => {
 
 let bulkAuctionRemoved = async (activity, totalCount, user_chatId) => {
     let msg = `**${totalCount}** ***Auctions Removed From MarketPlace.***`
-    user_chatId.forEach((chatid) => {
-        setTimeout(function () {
-            let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-            https.get(target, (res) => {
-                return console.log('New Bulk Listing Telegram Notification sent')
-            })
 
-        }, 500)
-    })
+    await userData.findOne({
+        "isSubscribe": true,
+        "omniflixAddress": activity.owner
+    }, async (error, result) => {
+        if (error) {
+            return console.log(error)
+        } else if (result) {
+            let user_chatIdOwner = result.userId
+            try {
+                bot.telegram.sendMessage(user_chatIdOwner, msg, {
+                    parse_mode: 'Markdown'
+                })
+            } catch (e) {
+                if (e.response && e.response.error_code === 403) {
+                    console.log('Bot was blocked by the user');
+                    await User.findOneAndUpdate({
+                        userId: user_chatIdOwner
+                    }, {
+                        $set: { isSubscribe: false }
+                    })
+                } else {
+                    throw e;
+                }
+            }
+        } else {
+            return console.log("Bulk Process Bid Nft Owner Not subscribed")
+        }
+    }).clone()
+
 
     await ActivityData.updateMany({
         type: activity.type,
@@ -273,7 +416,6 @@ let bulkProcessBid = async (activity, totalCount) => {
     let msg = `***You Won **${totalCount}** Auctions.***`
 
     let user_chatIdBidder
-    let user_omniflixAddressBidder
 
     await userData.findOne({
         "isSubscribe": true,
@@ -283,16 +425,27 @@ let bulkProcessBid = async (activity, totalCount) => {
             return console.log(error)
         } else if (result) {
             user_chatIdBidder = result.userId
-            user_omniflixAddressBidder = result.omniflixAddress
+            try {
+                bot.telegram.sendMessage(user_chatIdBidder, msg, {
+                    parse_mode: 'Markdown'
+                })
+            } catch (e) {
+                if (e.response && e.response.error_code === 403) {
+                    console.log('Bot was blocked by the user');
+                    await User.findOneAndUpdate({
+                        userId: user_chatIdBidder
+                    }, {
+                        $set: { isSubscribe: false }
+                    })
+                } else {
+                    throw e;
+                }
+            }
         } else {
             return console.log("Bulk Process Bid Nft Owner Not subscribed")
         }
     }).clone()
 
-    let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdBidder}&text=${msg}&parse_mode=markdown`
-    https.get(target, (res) => {
-        return console.log('Bulk Mint Nft Telegram Notification sent')
-    })
 
     await ActivityData.updateMany({
         type: activity.type,
@@ -311,7 +464,6 @@ let bulkProcessBid = async (activity, totalCount) => {
 let bulkPlaceBid = async (activity, totalCount) => {
     let msg = `***You Place **${totalCount}** bids.***`
     let user_chatIdBidder
-    let user_omniflixAddressBidder
 
     await userData.findOne({
         "isSubscribe": true,
@@ -321,15 +473,27 @@ let bulkPlaceBid = async (activity, totalCount) => {
             return console.log(error)
         } else if (result) {
             user_chatIdBidder = result.userId
-            user_omniflixAddressBidder = result.omniflixAddress
+            try {
+                bot.telegram.sendMessage(user_chatIdBidder, msg, {
+                    parse_mode: 'Markdown'
+                })
+            } catch (e) {
+                if (e.response && e.response.error_code === 403) {
+                    console.log('Bot was blocked by the user');
+                    await User.findOneAndUpdate({
+                        userId: user_chatIdBidder
+                    }, {
+                        $set: { isSubscribe: false }
+                    })
+                } else {
+                    throw e;
+                }
+            }
         } else {
             return console.log("Bulk Place Bid Nft Owner Not subscribed")
         }
     }).clone()
-    let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdBidder}&text=${msg}&parse_mode=markdown`
-    https.get(target, (res) => {
-        return console.log('Bulk Mint Nft Telegram Notification sent')
-    })
+
 
     await ActivityData.updateMany({
         type: activity.type,
@@ -348,7 +512,6 @@ let bulkPlaceBid = async (activity, totalCount) => {
 let bulkBuyNft = async (activity, totalCount) => {
     let msg = `***You Bought **${totalCount}** Nfts.***`
     let user_chatIdBuyer
-    let user_omniflixAddressBuyer
 
     await userData.findOne({
         "isSubscribe": true,
@@ -358,17 +521,78 @@ let bulkBuyNft = async (activity, totalCount) => {
             return console.log(error)
         } else if (result) {
             user_chatIdBuyer = result.userId
-            user_omniflixAddressBuyer = result.omniflixAddress
+            try {
+                bot.telegram.sendMessage(user_chatIdBuyer, msg, {
+                    parse_mode: 'Markdown'
+                })
+            } catch (e) {
+                if (e.response && e.response.error_code === 403) {
+                    console.log('Bot was blocked by the user');
+                    await User.findOneAndUpdate({
+                        userId: user_chatIdBuyer
+                    }, {
+                        $set: { isSubscribe: false }
+                    })
+                } else {
+                    throw e;
+                }
+            }
         } else {
             return console.log("Bulk Buy Nft Owner Not subscribed")
         }
     }).clone()
 
-    let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdBuyer}&text=${msg}&parse_mode=markdown`
-    
-    https.get(target, (res) => {
-        return console.log('Bulk Buy Nft Telegram Notification sent')
-    })
+
+
+    await ActivityData.updateMany({
+        type: activity.type,
+        block: activity.block
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    }).clone()
+}
+
+let bulkCreateCollection = async (activity, totalCount) => {
+    let msg = `***You Created **${totalCount}** Collections.***`
+
+    let user_chatIdCreator
+
+    await userData.findOne({
+        "isSubscribe": true,
+        "omniflixAddress": activity.creator
+    }, async (error, result) => {
+        if (error) {
+            return console.log(error)
+        } else if (result) {
+            user_chatIdCreator = result.userId
+            try {
+                bot.telegram.sendMessage(user_chatIdCreator, msg, {
+                    parse_mode: 'Markdown'
+                })
+            } catch (e) {
+                if (e.response && e.response.error_code === 403) {
+                    console.log('Bot was blocked by the user');
+                    await User.findOneAndUpdate({
+                        userId: user_chatIdCreator
+                    }, {
+                        $set: { isSubscribe: false }
+                    })
+                } else {
+                    throw e;
+                }
+            }
+        } else {
+            return console.log("Bulk Collection Create Owner Not subscribed")
+        }
+    }).clone()
+
+
 
     await ActivityData.updateMany({
         type: activity.type,
@@ -388,7 +612,6 @@ let bulkTransferCollection = async (activity, totalCount) => {
     let msg = `***You Transfered **${totalCount}** Collections.***`
 
     let user_chatIdCreator
-    let user_omniflixAddressCreator
 
     await userData.findOne({
         "isSubscribe": true,
@@ -398,17 +621,26 @@ let bulkTransferCollection = async (activity, totalCount) => {
             return console.log(error)
         } else if (result) {
             user_chatIdCreator = result.userId
-            user_omniflixAddressCreator = result.omniflixAddress
+            try {
+                bot.telegram.sendMessage(user_chatIdCreator, msg, {
+                    parse_mode: 'Markdown'
+                })
+            } catch (e) {
+                if (e.response && e.response.error_code === 403) {
+                    console.log('Bot was blocked by the user');
+                    await User.findOneAndUpdate({
+                        userId: user_chatIdCreator
+                    }, {
+                        $set: { isSubscribe: false }
+                    })
+                } else {
+                    throw e;
+                }
+            }
         } else {
             return console.log("Bulk Collection Transfer Owner Not subscribed")
         }
     }).clone()
-
-    let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdCreator}&text=${msg}&parse_mode=markdown`
-    
-    https.get(target, (res) => {
-        return console.log('Bulk Transfer Collection Telegram Notification sent')
-    })
 
     await ActivityData.updateMany({
         type: activity.type,
@@ -428,7 +660,6 @@ let bulkUpdateCollection = async (activity, totalCount) => {
     let msg = `***You Updated **${totalCount}** Collections.***`
 
     let user_chatIdCreator
-    let user_omniflixAddressCreator
 
     await userData.findOne({
         "isSubscribe": true,
@@ -438,17 +669,28 @@ let bulkUpdateCollection = async (activity, totalCount) => {
             return console.log(error)
         } else if (result) {
             user_chatIdCreator = result.userId
-            user_omniflixAddressCreator = result.omniflixAddress
+            try {
+                bot.telegram.sendMessage(user_chatIdCreator, msg, {
+                    parse_mode: 'Markdown'
+                })
+            } catch (e) {
+                if (e.response && e.response.error_code === 403) {
+                    console.log('Bot was blocked by the user');
+                    await User.findOneAndUpdate({
+                        userId: user_chatIdCreator
+                    }, {
+                        $set: { isSubscribe: false }
+                    })
+                } else {
+                    throw e;
+                }
+            }
         } else {
             return console.log("Bulk Collection Update Owner Not subscribed")
         }
     }).clone()
 
-    let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdCreator}&text=${msg}&parse_mode=markdown`
-    
-    https.get(target, (res) => {
-        return console.log('Bulk Collection Update Telegram Notification sent')
-    })
+
 
     await ActivityData.updateMany({
         type: activity.type,
@@ -474,6 +716,7 @@ module.exports = {
     bulkBurnNft,
     bulkMinting,
     bulkTransfer,
+    bulkCreateCollection,
     bulkTransferCollection,
     bulkUpdateCollection,
     bulkProcessBid,

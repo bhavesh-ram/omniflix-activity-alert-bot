@@ -1,7 +1,3 @@
-const dotenv = require('dotenv').config()
-const https = require('https')
-// const date =require('date-and-time');
-
 
 const { userData } = require('../models/user.model');
 const { ActivityData } = require("../models/activity.model");
@@ -14,9 +10,16 @@ String.prototype.fmt = function (hash) {
 }
 
 let listingHelper = async (activity) => {
+    let messageType;
+    if(activity.type === 'MsgListNFT') {
+        messageType = 'List NFT'
+    }
+
+    console.log(messageType)
     let user_chatId = []
     await userData.find({
-        "isSubscribe": true
+        "isSubscribe": true,
+        notificationTypes: { $ne: messageType }
     }, async (error, result) => {
         if (error) {
             return console.log(error)
@@ -30,19 +33,32 @@ let listingHelper = async (activity) => {
         }
     }).clone()
     // console.log(date.format(activity.created_at, 'ddd MMM YYYY at SS:SS [UTC]'))
-        let msg = listingHelperMsg.message.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id});
-        let mediaUrl = listingHelperMsg.url.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id});
-    user_chatId.forEach((chatid) => {
-        
-        bot.telegram.sendMessage(chatid,msg,{parse_mode:'Markdown',
-            reply_markup:{
-                inline_keyboard:[
-                    [
-                        {text:"New Listing On MarketPlace",url:mediaUrl}
+    let msg = listingHelperMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id });
+    let mediaUrl = listingHelperMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id });
+    user_chatId.forEach(async (chatid) => {
+        try {
+            bot.telegram.sendMessage(chatid, msg, {
+                parse_mode: 'Markdown',
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            { text: "New Listing On MarketPlace", url: mediaUrl }
+                        ]
                     ]
-                ]
+                }
+            })
+        } catch (e) {
+            if (e.response && e.response.error_code === 403) {
+                console.log('Bot was blocked by the user');
+                await User.findOneAndUpdate({
+                    userId: chatid
+                }, {
+                    $set: { isSubscribe: false }
+                })
+            } else {
+                throw e;
             }
-        })
+        }
     })
 
     ActivityData.findOneAndUpdate({
@@ -85,17 +101,29 @@ let deListingHelper = async (activity) => {
         let mediaUrl = delistingHelperMsg.url.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id})
 
        
-
-        bot.telegram.sendMessage(user_chatIdOwner,msg,{
-            parse_mode:'Markdown',
-            reply_markup:{
-                inline_keyboard:[
-                    [
-                        {text:"NFT Delisted from MarketPlace",url:mediaUrl}
+        try {
+            bot.telegram.sendMessage(user_chatIdOwner, msg, {
+                parse_mode: 'Markdown',
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            { text: "NFT Delisted from MarketPlace", url: mediaUrl }
+                        ]
                     ]
-                ]
+                }
+            })
+        } catch (e) {
+            if (e.response && e.response.error_code === 403) {
+                console.log('Bot was blocked by the user');
+                await User.findOneAndUpdate({
+                    userId: user_chatIdOwner
+                }, {
+                    $set: { isSubscribe: false }
+                })
+            } else {
+                throw e;
             }
-        })
+        }
 
         ActivityData.findOneAndUpdate({
             "_id": activity._id

@@ -1,5 +1,3 @@
-const dotenv = require('dotenv').config()
-const https = require('https')
 const { Telegraf } = require('telegraf');
 const bot = new Telegraf(process.env.token);
 const date =require('date-and-time');
@@ -15,10 +13,15 @@ String.prototype.fmt = function (hash) {
 
 
 let createAuctionHelper = async (activity) => {
+    let messageType;
+    if(activity.type === 'MsgCreateAuction') {
+        messageType = "Create Auction"
+    }
     // console.log(activities)
     let user_chatId = []
     await userData.find({
-        "isSubscribe": true
+        "isSubscribe": true,
+        notificationTypes: { $ne: messageType }
     }, async (error, result) => {
         if (error) {
             return console.log(error)
@@ -31,29 +34,37 @@ let createAuctionHelper = async (activity) => {
             return console.log("no User subscribed")
         }
     }).clone()
+    console.log(user_chatId)
 
     
     let msg = createAuctionMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id, START_DATE: date.format(activity.start_time, 'ddd MMM YYYY at SS:SS [UTC]'), END_DATE: date.format(activity.end_time, 'ddd MMM YYYY at SS:SS [UTC]') })
     let mediaUrl =createAuctionMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id})
-    user_chatId.forEach((chatid) => {
-        console.log(user_chatId)
+    user_chatId.forEach(async (chatid) => {
+        // console.log(user_chatId)
 
-        // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${chatid}&text=${msg}&parse_mode=markdown`
-        // console.log("target", target)
-        // https.get(target, (res) => {
-        //     return console.log('Auction Telegram Notification sent')
-        // })
-
-        bot.telegram.sendMessage(chatid,msg,{
-            parse_mode:'Markdown',
-            reply_markup:{
-                inline_keyboard:[
-                    [
-                        {text:"New Auction Created",url:mediaUrl}
+        try {
+            bot.telegram.sendMessage(chatid, msg, {
+                parse_mode: 'Markdown',
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            { text: "New Auction Created", url: mediaUrl }
+                        ]
                     ]
-                ]
+                }
+            })
+        } catch (e) {
+            if (e.response && e.response.error_code === 403) {
+                console.log('Bot was blocked by the user');
+                await User.findOneAndUpdate({
+                    userId: chatid
+                }, {
+                    $set: { isSubscribe: false }
+                })
+            } else {
+                throw e;
             }
-        })
+        }
     })
 
     ActivityData.findOneAndUpdate({
@@ -67,8 +78,6 @@ let createAuctionHelper = async (activity) => {
             return console.log(error)
         }
     })
-
-
 }
 
 let cancelAuctionHelper = async (activity) => {
@@ -96,22 +105,29 @@ let cancelAuctionHelper = async (activity) => {
         let msg = cancelAuctionMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
         let mediaUrl = cancelAuctionMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
 
-        // let target = `https://api.telegram.org/bot${process.env.token}/sendMessage?chat_id=${user_chatIdOwner}&text=${msg}&parse_mode=markdown`
-        // console.log("target", target)
-        // https.get(target, (res) => {
-        //     return console.log('Cancelled Auction Telegram Notification sent')
-        // })
-
-        bot.telegram.sendMessage(user_chatIdOwner,msg,{
-            parse_mode:'Markdown',
-            reply_markup:{
-                inline_keyboard:[
-                    [
-                        {text:"Auction Cancelled",url:mediaUrl}
+        try {
+            bot.telegram.sendMessage(user_chatIdOwner, msg, {
+                parse_mode: 'Markdown',
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            { text: "Auction Cancelled", url: mediaUrl }
+                        ]
                     ]
-                ]
+                }
+            })
+        } catch (e) {
+            if (e.response && e.response.error_code === 403) {
+                console.log('Bot was blocked by the user');
+                await User.findOneAndUpdate({
+                    userId: user_chatIdOwner
+                }, {
+                    $set: { isSubscribe: false }
+                })
+            } else {
+                throw e;
             }
-        })
+        }
 
         ActivityData.findOneAndUpdate({
             "_id": activity._id
@@ -124,11 +140,7 @@ let cancelAuctionHelper = async (activity) => {
                 return console.log(error)
             }
         })
-
     }
-   
-
-
 }
 
 let removeAuctionHelper = async (activity) => {
@@ -155,17 +167,29 @@ let removeAuctionHelper = async (activity) => {
        
         let msg = removeAuctionMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
         let mediaUrl = removeAuctionMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
-
-        bot.telegram.sendMessage(user_chatIdOwner,msg,{
-            parse_mode:'Markdown',
-            reply_markup:{
-                inline_keyboard:[
-                    [
-                        {text:"Auction Removed",url:mediaUrl}
+        try {
+            bot.telegram.sendMessage(user_chatIdOwner, msg, {
+                parse_mode: 'Markdown',
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            { text: "Auction Removed", url: mediaUrl }
+                        ]
                     ]
-                ]
+                }
+            })
+        } catch (e) {
+            if (e.response && e.response.error_code === 403) {
+                console.log('Bot was blocked by the user');
+                await User.findOneAndUpdate({
+                    userId: user_chatIdOwner
+                }, {
+                    $set: { isSubscribe: false }
+                })
+            } else {
+                throw e;
             }
-        })
+        }
 
         ActivityData.findOneAndUpdate({
             "_id": activity._id
@@ -178,11 +202,7 @@ let removeAuctionHelper = async (activity) => {
                 return console.log(error)
             }
         })
-
-    }
-
-
-    
+    }    
 }
 
 let processBidAuctionHelper = async (activity) => {
@@ -225,17 +245,29 @@ let processBidAuctionHelper = async (activity) => {
        
         let msg = processBidAuctionHelperMsg.auctionWonMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
         let mediaUrl = processBidAuctionHelperMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
-
-        bot.telegram.sendMessage(user_chatIdBidder,msg,{
-            parse_mode:'Markdown',
-            reply_markup:{
-                inline_keyboard:[
-                    [
-                        {text:"Auction Won",url:mediaUrl}
+        try {
+            bot.telegram.sendMessage(user_chatIdBidder, msg, {
+                parse_mode: 'Markdown',
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            { text: "Auction Won", url: mediaUrl }
+                        ]
                     ]
-                ]
+                }
+            })
+        } catch (e) {
+            if (e.response && e.response.error_code === 403) {
+                console.log('Bot was blocked by the user');
+                await User.findOneAndUpdate({
+                    userId: user_chatIdBidder
+                }, {
+                    $set: { isSubscribe: false }
+                })
+            } else {
+                throw e;
             }
-        })
+        }
         
         ActivityData.findOneAndUpdate({
             "_id": activity._id
@@ -255,17 +287,29 @@ let processBidAuctionHelper = async (activity) => {
         let msg = processBidAuctionHelperMsg.auctionEndMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
         let mediaUrl = processBidAuctionHelperMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
 
-
-        bot.telegram.sendMessage(user_chatIdOwner,msg,{
-            parse_mode:'Markdown',
-            reply_markup:{
-                inline_keyboard:[
-                    [
-                        {text:"Auction Ended",url:mediaUrl}
+        try {
+            bot.telegram.sendMessage(user_chatIdOwner, msg, {
+                parse_mode: 'Markdown',
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            { text: "Auction Ended", url: mediaUrl }
+                        ]
                     ]
-                ]
+                }
+            })
+        } catch (e) {
+            if (e.response && e.response.error_code === 403) {
+                console.log('Bot was blocked by the user');
+                await User.findOneAndUpdate({
+                    userId: user_chatIdOwner
+                }, {
+                    $set: { isSubscribe: false }
+                })
+            } else {
+                throw e;
             }
-        })
+        }
         
         ActivityData.findOneAndUpdate({
             "_id": activity._id
@@ -279,10 +323,7 @@ let processBidAuctionHelper = async (activity) => {
             }
         })
     }
-
-
 }
-
 
 let placeBidAuctionHelper = async (activity) => {
     try {
@@ -300,25 +341,34 @@ let placeBidAuctionHelper = async (activity) => {
 
         if (ownerData.length) {
 
-            ownerData.forEach((data) => {
+            ownerData.forEach(async (data) => {
 
                 let ownerMsg = placeBidAuctionHelperMsg.ownerMsg.fmt({ NFTID: nftId })
                 let mediaUrl = placeBidAuctionHelperMsg.url.fmt({ NFTID: nftId })
-
-                bot.telegram.sendMessage(data.userId,ownerMsg,{
-                    parse_mode:'Markdown',
-                    reply_markup:{
-                        inline_keyboard:[
-                            [
-                                {text:"New Bid Placed",url:mediaUrl}
+                try {
+                    bot.telegram.sendMessage(data.userId, ownerMsg, {
+                        parse_mode: 'Markdown',
+                        reply_markup: {
+                            inline_keyboard: [
+                                [
+                                    { text: "New Bid Placed", url: mediaUrl }
+                                ]
                             ]
-                        ]
+                        }
+                    })
+                } catch (e) {
+                    if (e.response && e.response.error_code === 403) {
+                        console.log('Bot was blocked by the user');
+                        await User.findOneAndUpdate({
+                            userId: data.userId
+                        }, {
+                            $set: { isSubscribe: false }
+                        })
+                    } else {
+                        throw e;
                     }
-                })
+                }
             })
-
-            
-
         }
         await ActivityData.findOneAndUpdate({
             _id: activity._id
@@ -327,8 +377,6 @@ let placeBidAuctionHelper = async (activity) => {
                 isNotified: true
             }
         })
-
-
 
         let bidderData = await userData.find({
             isSubscribe: true,
@@ -336,24 +384,34 @@ let placeBidAuctionHelper = async (activity) => {
         })
 
         if (bidderData.length) {
-            bidderData.forEach((data) => {
+            bidderData.forEach(async (data) => {
 
                 let bidderMsg = placeBidAuctionHelperMsg.bidderMsg.fmt({ NFTID: nftId })
                 let mediaUrl = placeBidAuctionHelperMsg.url.fmt({ NFTID: nftId })
-
-                bot.telegram.sendMessage(data.userId,bidderMsg,{
-                    parse_mode:'Markdown',
-                    reply_markup:{
-                        inline_keyboard:[
-                            [
-                                {text:"You Placed New Bid",url:mediaUrl}
+                try {
+                    bot.telegram.sendMessage(data.userId, bidderMsg, {
+                        parse_mode: 'Markdown',
+                        reply_markup: {
+                            inline_keyboard: [
+                                [
+                                    { text: "You Placed New Bid", url: mediaUrl }
+                                ]
                             ]
-                        ]
+                        }
+                    })
+                } catch (e) {
+                    if (e.response && e.response.error_code === 403) {
+                        console.log('Bot was blocked by the user');
+                        await User.findOneAndUpdate({
+                            userId: chatid
+                        }, {
+                            $set: { isSubscribe: false }
+                        })
+                    } else {
+                        throw e;
                     }
-                })
-            })
-
-            
+                }
+            })           
         }
 
         await ActivityData.findOneAndUpdate({
@@ -364,53 +422,45 @@ let placeBidAuctionHelper = async (activity) => {
             }
         })
 
-
-
-
-
         let previousBidder = await ActivityData.find({
             auction_id: activityData.auction_id
         }).sort({ 'amount.amount': -1 }).limit(2);
 
-
-
-
         if (previousBidder.length > 1) {
-
-
             let previousBidderData = await userData.find({
                 isSubscribe: true,
                 omniflixAddress: previousBidder[1].bidder
             })
-
-
-
             if (previousBidderData.length) {
-
-
-                previousBidderData.forEach((data) => {
-
+                previousBidderData.forEach(async (data) => {
                     if (previousBidderData) {
                         let previousBidderMsg = placeBidAuctionHelperMsg.previousBidderMsg.fmt({ NFTID: nftId })
                         let mediaUrl = placeBidAuctionHelperMsg.url.fmt({ NFTID: nftId })
-
-                        bot.telegram.sendMessage(data.userId,previousBidderMsg,{
-                            parse_mode:'Markdown',
-                            reply_markup:{
-                                inline_keyboard:[
-                                    [
-                                        {text:"Bid Overbidden",url:mediaUrl}
+                        try {
+                            bot.telegram.sendMessage(data.userId, previousBidderMsg, {
+                                parse_mode: 'Markdown',
+                                reply_markup: {
+                                    inline_keyboard: [
+                                        [
+                                            { text: "Bid Overbidden", url: mediaUrl }
+                                        ]
                                     ]
-                                ]
+                                }
+                            })
+                        } catch (e) {
+                            if (e.response && e.response.error_code === 403) {
+                                console.log('Bot was blocked by the user');
+                                await User.findOneAndUpdate({
+                                    userId: data.userId
+                                }, {
+                                    $set: { isSubscribe: false }
+                                })
+                            } else {
+                                throw e;
                             }
-                        })
+                        }
                     }
-
                 })
-
-                
-
-
             }
             await ActivityData.findOneAndUpdate({
                 _id: previousBidder[1]._id
@@ -419,25 +469,10 @@ let placeBidAuctionHelper = async (activity) => {
                     isNotified: true
                 }
             })
-           
-
         }
-
-
-
-
-
-
-
-
-
-
     } catch (error) {
         console.log(error)
-
-
     }
-
 }
 
 module.exports = {
