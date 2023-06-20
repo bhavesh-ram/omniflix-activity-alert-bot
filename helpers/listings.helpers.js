@@ -19,7 +19,11 @@ let listingHelper = async (activity) => {
     let user_chatId = []
     await userData.find({
         "isSubscribe": true,
-        notificationTypes: { $ne: messageType }
+        notificationTypes: { $ne: messageType },
+        $or: [
+            { collections: [] },
+            { collections: activity.denom_id.id }
+          ]
     }, async (error, result) => {
         if (error) {
             return console.log(error)
@@ -50,10 +54,8 @@ let listingHelper = async (activity) => {
         } catch (e) {
             if (e.response && e.response.error_code === 403) {
                 console.log('Bot was blocked by the user');
-                await User.findOneAndUpdate({
+                await User.findOneAndDelete({
                     userId: chatid
-                }, {
-                    $set: { isSubscribe: false }
                 })
             } else {
                 throw e;
