@@ -8,7 +8,7 @@ const { unSubscribeCMD } = require('./src/unsubscribe');
 // uncomment this to fetch data
 
 const { mainSchedulerData } = require('./src/mainJobScheduler');
-// const { activityFetch } = require('./src/activityFetching');
+const { activityFetch } = require('./src/activityFetching');
 const { notificationNotIntrestedIn, toggleHandler, notificationIntrestedIn } = require('./src/notificationNotIntrestedIn');
 const { subscribedCollectionNotification, unSubscribedCollectionNotification } = require('./src/addEnalbeCollection');
 const { changeAddress } = require('./src/addressChange');
