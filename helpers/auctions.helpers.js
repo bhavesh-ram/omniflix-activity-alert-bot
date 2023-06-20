@@ -21,7 +21,11 @@ let createAuctionHelper = async (activity) => {
     let user_chatId = []
     await userData.find({
         "isSubscribe": true,
-        notificationTypes: { $ne: messageType }
+        notificationTypes: { $ne: messageType },
+        $or: [
+            { collections: [] },
+            { collections: activity.denom_id.id }
+          ]
     }, async (error, result) => {
         if (error) {
             return console.log(error)

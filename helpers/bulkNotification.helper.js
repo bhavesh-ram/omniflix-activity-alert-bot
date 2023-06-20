@@ -112,7 +112,11 @@ let bulkListingNft = async (activity, totalCount) => {
     let user_chatId = []
     await userData.find({
         "isSubscribe": true,
-        notificationTypes: { $ne: messageType }
+        notificationTypes: { $ne: messageType },
+        $or: [
+            { collections: [] },
+            { collections: activity.denom_id.id }
+          ]
     }, async (error, result) => {
         if (error) {
             return console.log(error)
@@ -125,7 +129,7 @@ let bulkListingNft = async (activity, totalCount) => {
             return console.log("no User subscribed")
         }
     }).clone()
-    // console.log(user_chatId)
+    console.log('bukllisting ',user_chatId)
     user_chatId.forEach(async (chatid) => {
         try {
             bot.telegram.sendMessage(chatid, msg, {
@@ -273,7 +277,11 @@ let bulkAuction = async (activity, totalCount) => {
     let user_chatId = []
     await userData.find({
         "isSubscribe": true,
-        notificationTypes: { $ne: messageType }
+        notificationTypes: { $ne: messageType },
+        $or: [
+            { collections: [] },
+            { collections: activity.denom_id.id }
+          ]
     }, async (error, result) => {
         if (error) {
             return console.log(error)

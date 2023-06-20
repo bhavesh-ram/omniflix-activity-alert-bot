@@ -8,8 +8,10 @@ const { unSubscribeCMD } = require('./src/unsubscribe');
 // uncomment this to fetch data
 
 const { mainSchedulerData } = require('./src/mainJobScheduler');
-const { activityFetch } = require('./src/activityFetching');
+// const { activityFetch } = require('./src/activityFetching');
 const { notificationNotIntrestedIn, toggleHandler, notificationIntrestedIn } = require('./src/notificationNotIntrestedIn');
+const { subscribedCollectionNotification, unSubscribedCollectionNotification } = require('./src/addEnalbeCollection');
+const { changeAddress } = require('./src/addressChange');
 
 String.prototype.fmt = function (hash) {
     var string = this, key; for (key in hash) string = string.replace(new RegExp('\\{' + key + '\\}', 'gm'), hash[key]); return string
@@ -53,8 +55,11 @@ bot.command('unsubscribe',unSubscribeCMD)
 bot.command('subscribe', (ctx) => {
     ctx.reply('Send your OmniFlix account address')
   })
+bot.command('changeaddress', changeAddress);
 bot.command('notinterested', notificationNotIntrestedIn);
 bot.command('interested', notificationIntrestedIn);
+bot.command('addcollection', subscribedCollectionNotification);
+bot.command('removecollection', unSubscribedCollectionNotification);
 
 bot.action(/toggle_.+/, toggleHandler)
   

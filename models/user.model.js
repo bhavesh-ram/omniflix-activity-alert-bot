@@ -19,6 +19,10 @@ var userSchema = mongoose.Schema({
     chatDate:{
         type:Date,   
     },
+    collections: {
+        type: [String],
+        default: [],
+    },
     notificationTypes: {
         type: [String],
         enum: [
