@@ -129,6 +129,112 @@ const activitySchema = new mongoose.Schema({
             type: Number,
         },
     },
+    interaction: {
+        type: String,
+    },
+    claim_type: {
+        type: String,
+    },
+    nft_denom_id: {
+        type: String,
+    },
+    denom: {
+        type: String,
+    },
+    tokens_per_claim: {
+        denom: {
+            type: String,
+        },
+        amount: {
+            type: Number,
+        },
+    },
+    max_allowed_claims: {
+        type: Number,
+    },
+    deposit: {
+        denom: {
+            type: String,
+        },
+        amount: {
+            type: Number,
+        },
+    },
+    nft_mint_details: {
+        type: Object,
+    },
+    distribution: {
+        type: {
+            type: String,
+        },
+        stream_duration: {
+            type: String,
+        },
+    },
+    creation_fee: {
+        denom: {
+            type: String,
+        },
+        amount: {
+            type: Number,
+        },
+    },
+    campaign_id: {
+        type: String,
+    },
+    campaign: {
+        type: String,
+    },
+    claimer: {
+        type: String,
+    },
+    claimed_nft: {
+        type: String,
+    },
+    nft: {
+        type: String,
+    },
+    stream: {
+        type: String,
+    },
+    stream_type: {
+        type: String,
+    },
+    return_amount: {
+        denom: {
+            type: String,
+        },
+        amount: {
+            type: Number,
+        },
+    },
+    claimed_amount: {
+        denom: {
+            type: String,
+        },
+        amount: {
+            type: Number,
+        },
+    },
+    claims_count: {
+        type: Number,
+    },
+    periods: {
+        type: mongoose.Schema.Types.Mixed,
+        default: [],
+    },
+    cancellable: {
+        type: Boolean,
+    },
+    last_claimed_at: {
+        type: Date,
+    },
+    claim_settlement_type: {
+        type: String,
+    },
+    stream_id: {
+        type: String,
+    },
     created_at: {
         type: Date,
         required: true,
