@@ -102,6 +102,9 @@ const activitySchema = new mongoose.Schema({
     duration: {
         type: String,
     },
+    status: {
+        type: String,
+    },
     start_time: {
         type: Date,
     },
@@ -129,6 +132,14 @@ const activitySchema = new mongoose.Schema({
             type: Number,
         },
     },
+    remaining_deposit: {
+        denom: {
+            type: String,
+        },
+        amount: {
+            type: Number,
+        },
+    },
     interaction: {
         type: String,
     },
@@ -139,7 +150,7 @@ const activitySchema = new mongoose.Schema({
         type: String,
     },
     denom: {
-        type: String,
+        type: Object,
     },
     tokens_per_claim: {
         denom: {
@@ -183,19 +194,19 @@ const activitySchema = new mongoose.Schema({
         type: String,
     },
     campaign: {
-        type: String,
+        type: Object,
     },
     claimer: {
         type: String,
     },
     claimed_nft: {
-        type: String,
+        type: Object,
     },
     nft: {
-        type: String,
+        type: Object,
     },
     stream: {
-        type: String,
+        type: Object,
     },
     stream_type: {
         type: String,
