@@ -156,6 +156,71 @@ url:`https://omniflix.market/nft/{ACTIVITYID}`
 
 }
 
+
+let createCampaignMsg = {
+  message: `***New Campaign Created on OmniFlix.Market***  
+Starts:***{START_DATE}***  
+Ends:***{END_DATE}***   
+https://omniflix.market/campaigns/{ACTIVITYNFT_IDID}`,
+  url: `https://omniflix.market/campaigns/{ACTIVITYNFT_IDID} `
+};
+
+let cancelCampaignMsg = {
+  message: ` ***Campaign Cancelled.***  
+https://omniflix.market/campaigns/{ACTIVITYNFT_IDID}`,
+  url: `https://omniflix.market/campaigns/{ACTIVITYNFT_IDID}`
+}
+
+let depositCampaignMsg = {
+  message: ` ***Deposit Campaign.***  
+https://omniflix.market/campaigns/{ACTIVITYNFT_IDID}`,
+  url: `https://omniflix.market/campaigns/{ACTIVITYNFT_IDID}`
+}
+
+let endCampaignMsg = {
+  message: ` ***Following Camaign Ended.***  
+https://omniflix.market/campaigns/{ACTIVITYNFT_IDID}`,
+  url: `https://omniflix.market/campaigns/{ACTIVITYNFT_IDID}`
+}
+
+let claimCampaignMsg = {
+  message: ` ***You Claimed from below Campaign.***  
+https://omniflix.market/campaigns/{ACTIVITYNFT_IDID}`,
+  url: `https://omniflix.market/campaigns/{ACTIVITYNFT_IDID}`
+}
+
+let campaignTransferNftHelperMsg = {
+  senderMsg: ` ***You have transferred the below NFT..***  
+https://omniflix.market/nft/{ACTIVITYID}`,
+
+  receiverMsg: ` ***You have received an NFT***  
+https://omniflix.market/nft/{ACTIVITYID}`,
+
+url:`https://omniflix.market/nft/{ACTIVITYID}`
+}
+
+let streamSendHelperMsg = {
+  senderMsg: ` ***You have Send Below Stream..***  
+https://streampay.me/streams/{ACTIVITYID}`,
+
+  receiverMsg: ` ***You have received a Stream on Streampay.me***  
+https://streampay.me/streams/{ACTIVITYID}`,
+
+url:`https://streampay.me/streams/{ACTIVITYID}`
+}
+
+let StopStreamMsg = {
+  message: ` ***It Seems You Stopped Below Stream.***  
+https://streampay.me/streams/{ACTIVITYNFT_IDID}`,
+  url: `https://streampay.me/streams/{ACTIVITYNFT_IDID}`
+}
+
+let claimStreamedAmountMsg = {
+  message: ` ***You Claimed Amount from Stream below.***  
+https://streampay.me/streams/{ACTIVITYNFT_IDID}`,
+  url: `https://streampay.me/streams/{ACTIVITYNFT_IDID}`
+}
+
 module.exports = {
   StartMsg,
   HelpMsg,
@@ -176,5 +241,15 @@ module.exports = {
   updateDenomHelperMsg,
   listingHelperMsg,
   delistingHelperMsg,
-  transferNftHelperMsg
+  transferNftHelperMsg,
+  createCampaignMsg,
+  cancelCampaignMsg,
+  depositCampaignMsg,
+  endCampaignMsg,
+  claimCampaignMsg,
+  campaignTransferNftHelperMsg,
+
+  streamSendHelperMsg,
+  StopStreamMsg,
+  claimStreamedAmountMsg
 }

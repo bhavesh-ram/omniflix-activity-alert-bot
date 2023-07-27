@@ -20,7 +20,9 @@ let notificationNotIntrestedIn = async (ctx) => {
         'Create Auction',
         'List NFT',
         'Bulk Listing',
-        'Bulk Create Auction'
+        'Bulk Create Auction',
+        'Create Campaign',
+        'End Campaign'
     ];
 
     const keyboard = notificationTypes.map((type) => {
