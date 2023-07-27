@@ -714,6 +714,205 @@ let bulkUpdateCollection = async (activity, totalCount) => {
     }).clone()
 }
 
+let bulkCreateCampaign = async (activity, totalCount) => {
+    let msg = `***You Created **${totalCount}** Campaigns.***`
+
+    let user_chatIdCreator
+
+    await userData.findOne({
+        "isSubscribe": true,
+        "omniflixAddress": activity.creator
+    }, async (error, result) => {
+        if (error) {
+            return console.log(error)
+        } else if (result) {
+            user_chatIdCreator = result.userId
+            try {
+                bot.telegram.sendMessage(user_chatIdCreator, msg, {
+                    parse_mode: 'Markdown'
+                })
+            } catch (e) {
+                if (e.response && e.response.error_code === 403) {
+                    console.log('Bot was blocked by the user');
+                    await User.findOneAndUpdate({
+                        userId: user_chatIdCreator
+                    }, {
+                        $set: { isSubscribe: false }
+                    })
+                } else {
+                    throw e;
+                }
+            }
+        } else {
+            return console.log("Bulk Camapign Created Owner Not subscribed")
+        }
+    }).clone()
+
+
+
+    await ActivityData.updateMany({
+        type: activity.type,
+        block: activity.block
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    }).clone()
+}
+
+let bulkCancelCampaign = async (activity, totalCount) => {
+    let msg = `***You Canceled **${totalCount}** Campaigns.***`
+
+    let user_chatIdCreator
+
+    await userData.findOne({
+        "isSubscribe": true,
+        "omniflixAddress": activity.creator
+    }, async (error, result) => {
+        if (error) {
+            return console.log(error)
+        } else if (result) {
+            user_chatIdCreator = result.userId
+            try {
+                bot.telegram.sendMessage(user_chatIdCreator, msg, {
+                    parse_mode: 'Markdown'
+                })
+            } catch (e) {
+                if (e.response && e.response.error_code === 403) {
+                    console.log('Bot was blocked by the user');
+                    await User.findOneAndUpdate({
+                        userId: user_chatIdCreator
+                    }, {
+                        $set: { isSubscribe: false }
+                    })
+                } else {
+                    throw e;
+                }
+            }
+        } else {
+            return console.log("Bulk Camapign Canceled Owner Not subscribed")
+        }
+    }).clone()
+
+
+
+    await ActivityData.updateMany({
+        type: activity.type,
+        block: activity.block
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    }).clone()
+}
+
+let bulkDepositCampaign = async (activity, totalCount) => {
+    let msg = `***You Deposit **${totalCount}** Campaigns.***`
+
+    let user_chatIdCreator
+
+    await userData.findOne({
+        "isSubscribe": true,
+        "omniflixAddress": activity.creator
+    }, async (error, result) => {
+        if (error) {
+            return console.log(error)
+        } else if (result) {
+            user_chatIdCreator = result.userId
+            try {
+                bot.telegram.sendMessage(user_chatIdCreator, msg, {
+                    parse_mode: 'Markdown'
+                })
+            } catch (e) {
+                if (e.response && e.response.error_code === 403) {
+                    console.log('Bot was blocked by the user');
+                    await User.findOneAndUpdate({
+                        userId: user_chatIdCreator
+                    }, {
+                        $set: { isSubscribe: false }
+                    })
+                } else {
+                    throw e;
+                }
+            }
+        } else {
+            return console.log("Bulk Camapign Deposit Owner Not subscribed")
+        }
+    }).clone()
+
+
+
+    await ActivityData.updateMany({
+        type: activity.type,
+        block: activity.block
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    }).clone()
+}
+
+let bulkEndCampaign = async (activity, totalCount) => {
+    let msg = `*** Total **${totalCount}** Campaigns Ended.***`
+
+    let user_chatIdCreator
+
+    await userData.findOne({
+        "isSubscribe": true,
+        "omniflixAddress": activity.creator
+    }, async (error, result) => {
+        if (error) {
+            return console.log(error)
+        } else if (result) {
+            user_chatIdCreator = result.userId
+            try {
+                bot.telegram.sendMessage(user_chatIdCreator, msg, {
+                    parse_mode: 'Markdown'
+                })
+            } catch (e) {
+                if (e.response && e.response.error_code === 403) {
+                    console.log('Bot was blocked by the user');
+                    await User.findOneAndUpdate({
+                        userId: user_chatIdCreator
+                    }, {
+                        $set: { isSubscribe: false }
+                    })
+                } else {
+                    throw e;
+                }
+            }
+        } else {
+            return console.log("Bulk Camapign End Owner Not subscribed")
+        }
+    }).clone()
+
+
+
+    await ActivityData.updateMany({
+        type: activity.type,
+        block: activity.block
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    }).clone()
+}
 
 module.exports = {
     bulkAuction,
@@ -729,5 +928,9 @@ module.exports = {
     bulkUpdateCollection,
     bulkProcessBid,
     bulkPlaceBid,
-    bulkBuyNft
+    bulkBuyNft,
+    bulkCreateCampaign,
+    bulkCancelCampaign,
+    bulkDepositCampaign,
+    bulkEndCampaign,
 }
