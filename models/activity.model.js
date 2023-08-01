@@ -246,6 +246,12 @@ const activitySchema = new mongoose.Schema({
     stream_id: {
         type: String,
     },
+    verified: {
+        type: Boolean,
+    },
+    flixdrop: {
+        type: Boolean,
+    },
     created_at: {
         type: Date,
         required: true,

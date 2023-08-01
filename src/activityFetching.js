@@ -17,7 +17,7 @@ let activityFetching = async () => {
             console.log(error)
         } else if (result) {
         
-            let url = `${process.env.ACTIVITY_URL}/activity?createdFrom=${new Date(result[0].created_at).toUTCString()}&sortBy=created_at&order=asc&limit=2000`
+            let url = `${process.env.ACTIVITY_URL}/activity-bot?createdFrom=${new Date(result[0].created_at).toUTCString()}&sortBy=created_at&order=asc&limit=2000`
             
             let options = { json: true };
             request(url, options, async (error, res, body) => {
