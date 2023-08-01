@@ -1,7 +1,7 @@
 
 const { userData } = require('../models/user.model');
 const { ActivityData } = require("../models/activity.model");
-const {listingHelperMsg,delistingHelperMsg} = require("../src/template.js")
+const { listingHelperMsg, delistingHelperMsg } = require("../src/template.js")
 const { Telegraf } = require('telegraf');
 const bot = new Telegraf(process.env.token);
 
@@ -11,7 +11,7 @@ String.prototype.fmt = function (hash) {
 
 let listingHelper = async (activity) => {
     let messageType;
-    if(activity.type === 'MsgListNFT') {
+    if (activity.type === 'MsgListNFT') {
         messageType = 'List NFT'
     }
 
@@ -23,7 +23,7 @@ let listingHelper = async (activity) => {
         $or: [
             { collections: [] },
             { collections: activity.denom_id.id }
-          ]
+        ]
     }, async (error, result) => {
         if (error) {
             return console.log(error)
@@ -98,11 +98,11 @@ let deListingHelper = async (activity) => {
     }).clone()
 
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
-        
-        let msg = delistingHelperMsg.message.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id})
-        let mediaUrl = delistingHelperMsg.url.fmt({ ACTIVITYNFT_IDID:activity.nft_id.id})
 
-       
+        let msg = delistingHelperMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
+        let mediaUrl = delistingHelperMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
+
+
         try {
             bot.telegram.sendMessage(user_chatIdOwner, msg, {
                 parse_mode: 'Markdown',
@@ -140,6 +140,17 @@ let deListingHelper = async (activity) => {
         })
 
     }
+    ActivityData.findOneAndUpdate({
+        "_id": activity._id
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    })
 }
 
 

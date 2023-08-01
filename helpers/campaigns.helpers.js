@@ -1,6 +1,6 @@
 const { Telegraf } = require('telegraf');
 const bot = new Telegraf(process.env.token);
-const date =require('date-and-time');
+const date = require('date-and-time');
 const { userData } = require('../models/user.model');
 const { ActivityData } = require("../models/activity.model");
 const { createCampaignMsg, cancelCampaignMsg, endCampaignMsg, claimCampaignMsg, campaignTransferNftHelperMsg, streamSendHelperMsg, StopStreamMsg, claimStreamedAmountMsg } = require('../src/template');
@@ -10,7 +10,7 @@ String.prototype.fmt = function (hash) {
 
 let MsgCreateCampaignHelper = async (activity) => {
     let messageType;
-    if(activity.type === 'MsgCreateCampaignHelper') {
+    if (activity.type === 'MsgCreateCampaignHelper') {
         messageType = "Create Campaign"
     }
     let user_chatId = []
@@ -20,7 +20,7 @@ let MsgCreateCampaignHelper = async (activity) => {
         $or: [
             { collections: [] },
             { collections: activity.denom.id }
-          ]
+        ]
     }, async (error, result) => {
         if (error) {
             return console.log(error)
@@ -35,9 +35,9 @@ let MsgCreateCampaignHelper = async (activity) => {
     }).clone()
     console.log(user_chatId)
 
-    
+
     let msg = createCampaignMsg.message.fmt({ ACTIVITYNFT_IDID: activity.id, START_DATE: date.format(activity.start_time, 'ddd MMM YYYY at SS:SS [UTC]'), END_DATE: date.format(activity.end_time, 'ddd MMM YYYY at SS:SS [UTC]') })
-    let mediaUrl =createCampaignMsg.url.fmt({ ACTIVITYNFT_IDID: activity.id})
+    let mediaUrl = createCampaignMsg.url.fmt({ ACTIVITYNFT_IDID: activity.id })
     user_chatId.forEach(async (chatid) => {
         try {
             bot.telegram.sendMessage(chatid, msg, {
@@ -98,7 +98,7 @@ let MsgCancelCampaignHelper = async (activity) => {
 
 
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
-       
+
         let msg = cancelCampaignMsg.message.fmt({ ACTIVITYNFT_IDID: activity.id })
         let mediaUrl = cancelCampaignMsg.url.fmt({ ACTIVITYNFT_IDID: activity.id })
 
@@ -138,6 +138,17 @@ let MsgCancelCampaignHelper = async (activity) => {
             }
         })
     }
+    ActivityData.findOneAndUpdate({
+        "_id": activity._id
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    })
 }
 
 let MsgDepositCampaignHelper = async (activity) => {
@@ -161,7 +172,7 @@ let MsgDepositCampaignHelper = async (activity) => {
 
 
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
-       
+
         let msg = depositCampaignMsg.message.fmt({ ACTIVITYNFT_IDID: activity.id })
         let mediaUrl = depositCampaignMsg.url.fmt({ ACTIVITYNFT_IDID: activity.id })
 
@@ -201,11 +212,22 @@ let MsgDepositCampaignHelper = async (activity) => {
             }
         })
     }
+    ActivityData.findOneAndUpdate({
+        "_id": activity._id
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    })
 }
 
 let endCampaignHelper = async (activity) => {
     let messageType;
-    if(activity.type === 'EndCampaign') {
+    if (activity.type === 'EndCampaign') {
         messageType = "End Campaign"
     }
     let user_chatId = []
@@ -215,7 +237,7 @@ let endCampaignHelper = async (activity) => {
         $or: [
             { collections: [] },
             { collections: activity.denom.id }
-          ]
+        ]
     }, async (error, result) => {
         if (error) {
             return console.log(error)
@@ -230,9 +252,9 @@ let endCampaignHelper = async (activity) => {
     }).clone()
     console.log(user_chatId)
 
-    
-    let msg = endCampaignMsg.message.fmt({ ACTIVITYNFT_IDID: activity.id})
-    let mediaUrl =endCampaignMsg.url.fmt({ ACTIVITYNFT_IDID: activity.id})
+
+    let msg = endCampaignMsg.message.fmt({ ACTIVITYNFT_IDID: activity.id })
+    let mediaUrl = endCampaignMsg.url.fmt({ ACTIVITYNFT_IDID: activity.id })
     user_chatId.forEach(async (chatid) => {
         try {
             bot.telegram.sendMessage(chatid, msg, {
@@ -293,7 +315,7 @@ let MsgClaimCampaignHelper = async (activity) => {
 
 
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
-       
+
         let msg = claimCampaignMsg.message.fmt({ ACTIVITYNFT_IDID: activity.id })
         let mediaUrl = claimCampaignMsg.url.fmt({ ACTIVITYNFT_IDID: activity.id })
 
@@ -333,6 +355,17 @@ let MsgClaimCampaignHelper = async (activity) => {
             }
         })
     }
+    ActivityData.findOneAndUpdate({
+        "_id": activity._id
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    })
 }
 
 let campaignTransferNftHelper = async (activity) => {
@@ -452,6 +485,17 @@ let campaignTransferNftHelper = async (activity) => {
             }
         })
     }
+    ActivityData.findOneAndUpdate({
+        "_id": activity._id
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    })
 
 }
 
@@ -572,6 +616,17 @@ let MsgStreamSendHelper = async (activity) => {
             }
         })
     }
+    ActivityData.findOneAndUpdate({
+        "_id": activity._id
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    })
 
 }
 
@@ -596,7 +651,7 @@ let MsgStopStreamHelper = async (activity) => {
 
 
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
-       
+
         let msg = StopStreamMsg.message.fmt({ ACTIVITYNFT_IDID: activity.id })
         let mediaUrl = StopStreamMsg.url.fmt({ ACTIVITYNFT_IDID: activity.id })
 
@@ -636,6 +691,17 @@ let MsgStopStreamHelper = async (activity) => {
             }
         })
     }
+    ActivityData.findOneAndUpdate({
+        "_id": activity._id
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    })
 }
 
 let MsgClaimStreamedAmountHelper = async (activity) => {
@@ -659,7 +725,7 @@ let MsgClaimStreamedAmountHelper = async (activity) => {
 
 
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
-       
+
         let msg = claimStreamedAmountMsg.message.fmt({ ACTIVITYNFT_IDID: activity.id })
         let mediaUrl = claimStreamedAmountMsg.url.fmt({ ACTIVITYNFT_IDID: activity.id })
 
@@ -699,6 +765,17 @@ let MsgClaimStreamedAmountHelper = async (activity) => {
             }
         })
     }
+    ActivityData.findOneAndUpdate({
+        "_id": activity._id
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    })
 }
 
 module.exports = {

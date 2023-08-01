@@ -85,7 +85,7 @@ let transferNftHelper = async (activity) => {
                 return console.log(error)
             }
         })
-    }
+    } 
 
     if (user_chatIdRecipient != undefined && user_omniflixAddressRecipient != undefined) {
 
@@ -126,7 +126,19 @@ let transferNftHelper = async (activity) => {
                 return console.log(error)
             }
         })
-    }
+    } 
+
+    ActivityData.findOneAndUpdate({
+        "_id": activity._id
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    })
 
 }
 
