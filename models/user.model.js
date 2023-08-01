@@ -29,8 +29,10 @@ var userSchema = mongoose.Schema({
             'Create Auction',
             'List NFT',
             'Bulk Listing',
-            'Bulk Create Auction'
-          ],
+            'Bulk Create Auction',
+            'Create Campaign',
+            'End Campaign'
+        ],
         default: [], // Default to an empty array for notification types
       },
     
