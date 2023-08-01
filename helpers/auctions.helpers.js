@@ -1,6 +1,6 @@
 const { Telegraf } = require('telegraf');
 const bot = new Telegraf(process.env.token);
-const date =require('date-and-time');
+const date = require('date-and-time');
 
 const { userData } = require('../models/user.model');
 const { ActivityData } = require("../models/activity.model");
@@ -14,7 +14,7 @@ String.prototype.fmt = function (hash) {
 
 let createAuctionHelper = async (activity) => {
     let messageType;
-    if(activity.type === 'MsgCreateAuction') {
+    if (activity.type === 'MsgCreateAuction') {
         messageType = "Create Auction"
     }
     // console.log(activities)
@@ -25,7 +25,7 @@ let createAuctionHelper = async (activity) => {
         $or: [
             { collections: [] },
             { collections: activity.denom_id.id }
-          ]
+        ]
     }, async (error, result) => {
         if (error) {
             return console.log(error)
@@ -40,9 +40,9 @@ let createAuctionHelper = async (activity) => {
     }).clone()
     console.log(user_chatId)
 
-    
+
     let msg = createAuctionMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id, START_DATE: date.format(activity.start_time, 'ddd MMM YYYY at SS:SS [UTC]'), END_DATE: date.format(activity.end_time, 'ddd MMM YYYY at SS:SS [UTC]') })
-    let mediaUrl =createAuctionMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id})
+    let mediaUrl = createAuctionMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
     user_chatId.forEach(async (chatid) => {
         // console.log(user_chatId)
 
@@ -105,7 +105,7 @@ let cancelAuctionHelper = async (activity) => {
 
 
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
-       
+
         let msg = cancelAuctionMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
         let mediaUrl = cancelAuctionMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
 
@@ -145,6 +145,17 @@ let cancelAuctionHelper = async (activity) => {
             }
         })
     }
+    ActivityData.findOneAndUpdate({
+        "_id": activity._id
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    })
 }
 
 let removeAuctionHelper = async (activity) => {
@@ -166,9 +177,9 @@ let removeAuctionHelper = async (activity) => {
             return console.log("Cancel Auction user not subscribed")
         }
     }).clone()
-    
+
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
-       
+
         let msg = removeAuctionMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
         let mediaUrl = removeAuctionMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
         try {
@@ -206,7 +217,18 @@ let removeAuctionHelper = async (activity) => {
                 return console.log(error)
             }
         })
-    }    
+    }
+    ActivityData.findOneAndUpdate({
+        "_id": activity._id
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    })
 }
 
 let processBidAuctionHelper = async (activity) => {
@@ -246,7 +268,7 @@ let processBidAuctionHelper = async (activity) => {
     }).clone()
 
     if (user_omniflixAddressBidder != undefined && user_chatIdBidder != undefined) {
-       
+
         let msg = processBidAuctionHelperMsg.auctionWonMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
         let mediaUrl = processBidAuctionHelperMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
         try {
@@ -272,7 +294,7 @@ let processBidAuctionHelper = async (activity) => {
                 throw e;
             }
         }
-        
+
         ActivityData.findOneAndUpdate({
             "_id": activity._id
         }, {
@@ -287,7 +309,7 @@ let processBidAuctionHelper = async (activity) => {
     }
 
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
-        
+
         let msg = processBidAuctionHelperMsg.auctionEndMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
         let mediaUrl = processBidAuctionHelperMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
 
@@ -314,7 +336,7 @@ let processBidAuctionHelper = async (activity) => {
                 throw e;
             }
         }
-        
+
         ActivityData.findOneAndUpdate({
             "_id": activity._id
         }, {
@@ -327,6 +349,17 @@ let processBidAuctionHelper = async (activity) => {
             }
         })
     }
+    ActivityData.findOneAndUpdate({
+        "_id": activity._id
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    })
 }
 
 let placeBidAuctionHelper = async (activity) => {
@@ -374,14 +407,7 @@ let placeBidAuctionHelper = async (activity) => {
                 }
             })
         }
-        await ActivityData.findOneAndUpdate({
-            _id: activity._id
-        }, {
-            $set: {
-                isNotified: true
-            }
-        })
-
+        
         let bidderData = await userData.find({
             isSubscribe: true,
             omniflixAddress: activityData.bidder
@@ -415,16 +441,8 @@ let placeBidAuctionHelper = async (activity) => {
                         throw e;
                     }
                 }
-            })           
+            })
         }
-
-        await ActivityData.findOneAndUpdate({
-            _id: activity._id
-        }, {
-            $set: {
-                isNotified: true
-            }
-        })
 
         let previousBidder = await ActivityData.find({
             auction_id: activityData.auction_id
@@ -474,6 +492,15 @@ let placeBidAuctionHelper = async (activity) => {
                 }
             })
         }
+
+        await ActivityData.findOneAndUpdate({
+            _id: activity._id
+        }, {
+            $set: {
+                isNotified: true
+            }
+        })
+        
     } catch (error) {
         console.log(error)
     }
