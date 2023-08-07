@@ -5,12 +5,12 @@ const { ActivityData } = require("../models/activity.model");
 const { createAuctionHelper, cancelAuctionHelper, removeAuctionHelper, processBidAuctionHelper, placeBidAuctionHelper } = require("../helpers/auctions.helpers");
 const { listingHelper, deListingHelper } = require("../helpers/listings.helpers");
 const { transferNftHelper } = require("../helpers/transferNft.helper");
-const { buyNftHelper, burnNftHelper, mintONFTHelper } = require("../helpers/buyNfts.helpers");
+const { buyNftHelper, burnNftHelper, mintONFTHelper, burnNftClaimHelper } = require("../helpers/buyNfts.helpers");
 const { updateDenomHelper, transferDenomHelper, createDenomHelper } = require("../helpers/denoms.helper");
 const https = require('https')
 const { userData } = require('../models/user.model');
 const { bulkAuction, bulkListingNft, bulkAuctionCancel, bulkAuctionRemoved, bulkDeListingNft, bulkBurnNft, bulkMinting, bulkTransfer, bulkProcessBid, bulkPlaceBid, bulkBuyNft, bulkUpdateCollection, bulkTransferCollection, bulkCreateCollection, bulkCreateCampaign, bulkCancelCampaign, bulkDepositCampaign, bulkEndCampaign } = require("../helpers/bulkNotification.helper");
-const { MsgCreateCampaignHelper, MsgCancelCampaignHelper, MsgDepositCampaignHelper, endCampaignHelper, campaignTransferNftHelper, MsgStreamSendHelper, MsgStopStreamHelper, MsgClaimStreamedAmountHelper } = require("../helpers/campaigns.helpers");
+const { MsgCreateCampaignHelper, MsgCancelCampaignHelper, MsgDepositCampaignHelper, endCampaignHelper, campaignTransferNftHelper, MsgStreamSendHelper, MsgStopStreamHelper, MsgClaimStreamedAmountHelper, MsgStreamCreatedHelper } = require("../helpers/campaigns.helpers");
 
 
 
@@ -170,8 +170,12 @@ let MainScheduler = async () => {
                                                 MsgStreamSendHelper(activity)
                                             } else if (activity.type == "MsgStopStream") {
                                                 MsgStopStreamHelper(activity)
-                                            } else if (activity.type == "MsgClaimStreamedAmount") {
+                                            } else if (activity.type == "CLAIM") {
                                                 MsgClaimStreamedAmountHelper(activity)
+                                            } else if (activity.type == "BurnNft") {
+                                                burnNftClaimHelper(activity)
+                                            } else if (activity.type == "StreamCreated") {
+                                                MsgStreamCreatedHelper(activity)
                                             }
                                         } else {
                                             return console.log("Collection Not Verified")
@@ -220,8 +224,12 @@ let MainScheduler = async () => {
                                             MsgStreamSendHelper(activity)
                                         } else if (activity.type == "MsgStopStream") {
                                             MsgStopStreamHelper(activity)
-                                        } else if (activity.type == "MsgClaimStreamedAmount") {
+                                        } else if (activity.type == "CLAIM") {
                                             MsgClaimStreamedAmountHelper(activity)
+                                        } else if (activity.type == "BurnNft") {
+                                            burnNftClaimHelper(activity)
+                                        } else if (activity.type == "StreamCreated") {
+                                            MsgStreamCreatedHelper(activity)
                                         }
 
                                     }

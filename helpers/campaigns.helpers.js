@@ -630,6 +630,137 @@ let MsgStreamSendHelper = async (activity) => {
 
 }
 
+let MsgStreamCreatedHelper = async (activity) => {
+    let user_chatIdSender
+    let user_omniflixAddressSender
+    let user_chatIdRecipient
+    let user_omniflixAddressRecipient
+
+    await userData.findOne({
+        "isSubscribe": true,
+        "omniflixAddress": activity.recipient
+    }, async (error, result) => {
+        if (error) {
+            return console.log(error)
+        } else if (result) {
+            user_chatIdRecipient = result.userId
+            user_omniflixAddressRecipient = result.omniflixAddress
+
+        } else {
+            return console.log("Stream Recipient not subscribed")
+        }
+    }).clone()
+
+    await userData.findOne({
+        "isSubscribe": true,
+        "omniflixAddress": activity.sender
+    }, async (error, result) => {
+        if (error) {
+            return console.log(error)
+        } else if (result) {
+            user_chatIdSender = result.userId
+            user_omniflixAddressSender = result.omniflixAddress
+        } else {
+            return console.log("Stream Sender Not subscribed")
+        }
+    }).clone()
+
+
+    if (user_omniflixAddressSender != undefined && user_chatIdSender != undefined) {
+
+        let msg = streamSendHelperMsg.senderMsg.fmt({ ACTIVITYID: activity.id })
+        let mediaUrl = streamSendHelperMsg.url.fmt({ ACTIVITYID: activity.id })
+        try {
+            bot.telegram.sendMessage(user_chatIdSender, msg, {
+                parse_mode: 'Markdown',
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            { text: "Stream Send", url: mediaUrl }
+                        ]
+                    ]
+                }
+            })
+        } catch (e) {
+            if (e.response && e.response.error_code === 403) {
+                console.log('Bot was blocked by the user');
+                await User.findOneAndUpdate({
+                    userId: user_chatIdSender
+                }, {
+                    $set: { isSubscribe: false }
+                })
+            } else {
+                throw e;
+            }
+        }
+
+        ActivityData.findOneAndUpdate({
+            "_id": activity._id
+        }, {
+            $set: {
+                "isNotified": true,
+            }
+        }, async (error) => {
+            if (error) {
+                return console.log(error)
+            }
+        })
+    }
+
+    if (user_chatIdRecipient != undefined && user_omniflixAddressRecipient != undefined) {
+
+        let msg = streamSendHelperMsg.receiverMsg.fmt({ ACTIVITYID: activity.id })
+        let mediaUrl = streamSendHelperMsg.url.fmt({ ACTIVITYID: activity.id })
+        try {
+            bot.telegram.sendMessage(user_chatIdRecipient, msg, {
+                parse_mode: 'Markdown',
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            { text: "Stream Receved", url: mediaUrl }
+                        ]
+                    ]
+                }
+            })
+        } catch (e) {
+            if (e.response && e.response.error_code === 403) {
+                console.log('Bot was blocked by the user');
+                await User.findOneAndUpdate({
+                    userId: user_chatIdRecipient
+                }, {
+                    $set: { isSubscribe: false }
+                })
+            } else {
+                throw e;
+            }
+        }
+
+        ActivityData.findOneAndUpdate({
+            "_id": activity._id
+        }, {
+            $set: {
+                "isNotified": true,
+            }
+        }, async (error) => {
+            if (error) {
+                return console.log(error)
+            }
+        })
+    }
+    ActivityData.findOneAndUpdate({
+        "_id": activity._id
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    })
+
+}
+
 let MsgStopStreamHelper = async (activity) => {
     let user_chatIdOwner
     let user_omniflixAddressOwner
@@ -788,4 +919,5 @@ module.exports = {
     MsgStreamSendHelper,
     MsgStopStreamHelper,
     MsgClaimStreamedAmountHelper,
+    MsgStreamCreatedHelper
 }
