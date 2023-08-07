@@ -287,8 +287,75 @@ let mintONFTHelper = async (activity) => {
     }
 }
 
+let burnNftClaimHelper = async (activity) => {
+    let user_chatIdOwner
+    let user_omniflixAddressOwner
+
+    await userData.findOne({
+        "isSubscribe": true,
+        "omniflixAddress": activity.owner
+    }, async (error, result) => {
+        if (error) {
+            return console.log(error)
+        } else if (result) {
+            user_chatIdOwner = result.userId
+            user_omniflixAddressOwner = result.omniflixAddress
+
+        } else {
+            return console.log("Burn ONFT user not subscribed")
+        }
+    }).clone()
+
+    if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
+
+        let msg = burnNftHelperMsg.message.fmt({ ACTIVITYID: activity.id })
+        let mediaUrl = burnNftHelperMsg.url.fmt({ ACTIVITYID: activity.id })
+
+        try {
+            bot.telegram.sendMessage(user_chatIdOwner, msg, {
+                parse_mode: 'Markdown',
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            { text: "Burned NFT", url: mediaUrl }
+                        ]
+                    ]
+                }
+            })
+        } catch (e) {
+            if (e.response && e.response.error_code === 403) {
+                console.log('Bot was blocked by the user');
+                await User.findOneAndUpdate({
+                    userId: user_chatIdOwner
+                }, {
+                    $set: { isSubscribe: false }
+                })
+            } else {
+                throw e;
+            }
+        }
+
+
+       
+
+    }
+    ActivityData.findOneAndUpdate({
+        "_id": activity._id
+    }, {
+        $set: {
+            "isNotified": true,
+        }
+    }, async (error) => {
+        if (error) {
+            return console.log(error)
+        }
+    })
+}
+
+
 module.exports = {
     buyNftHelper,
     burnNftHelper,
-    mintONFTHelper
+    mintONFTHelper,
+    burnNftClaimHelper
 }
