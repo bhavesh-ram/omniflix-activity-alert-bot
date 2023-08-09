@@ -161,32 +161,32 @@ let createCampaignMsg = {
   message: `***New Campaign Created on OmniFlix.Market***  
 Starts:***{START_DATE}***  
 Ends:***{END_DATE}***   
-https://omniflix.market/campaigns/{ACTIVITYNFT_IDID}`,
-  url: `https://omniflix.market/campaigns/{ACTIVITYNFT_IDID} `
+https://omniflix.market/campaign/{ACTIVITYNFT_IDID}`,
+  url: `https://omniflix.market/campaign/{ACTIVITYNFT_IDID} `
 };
 
 let cancelCampaignMsg = {
   message: ` ***Campaign Cancelled.***  
-https://omniflix.market/campaigns/{ACTIVITYNFT_IDID}`,
-  url: `https://omniflix.market/campaigns/{ACTIVITYNFT_IDID}`
+https://omniflix.market/campaign/{ACTIVITYNFT_IDID}`,
+  url: `https://omniflix.market/campaign/{ACTIVITYNFT_IDID}`
 }
 
 let depositCampaignMsg = {
   message: ` ***Deposit Campaign.***  
-https://omniflix.market/campaigns/{ACTIVITYNFT_IDID}`,
-  url: `https://omniflix.market/campaigns/{ACTIVITYNFT_IDID}`
+https://omniflix.market/campaign/{ACTIVITYNFT_IDID}`,
+  url: `https://omniflix.market/campaign/{ACTIVITYNFT_IDID}`
 }
 
 let endCampaignMsg = {
   message: ` ***Following Camaign Ended.***  
-https://omniflix.market/campaigns/{ACTIVITYNFT_IDID}`,
-  url: `https://omniflix.market/campaigns/{ACTIVITYNFT_IDID}`
+https://omniflix.market/campaign/{ACTIVITYNFT_IDID}`,
+  url: `https://omniflix.market/campaign/{ACTIVITYNFT_IDID}`
 }
 
 let claimCampaignMsg = {
   message: ` ***You Claimed from below Campaign.***  
-https://omniflix.market/campaigns/{ACTIVITYNFT_IDID}`,
-  url: `https://omniflix.market/campaigns/{ACTIVITYNFT_IDID}`
+https://omniflix.market/campaign/{ACTIVITYNFT_IDID}`,
+  url: `https://omniflix.market/campaign/{ACTIVITYNFT_IDID}`
 }
 
 let campaignTransferNftHelperMsg = {
