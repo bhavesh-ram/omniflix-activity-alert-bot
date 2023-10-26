@@ -44,27 +44,10 @@ let MainScheduler = async () => {
                         console.log(error)
                     } else if (activities && activities.length) {
                         activities.forEach(async (activity) => {
-
-                            let user_chatId = []
-                            await userData.find({
-                                "isSubscribe": true,
-                            }, async (error, result) => {
-                                if (error) {
-                                    return console.log(error)
-                                } else if (result && result.length) {
-                                    user_chatId.splice(0,)
-                                    result.forEach(user => {
-                                        user_chatId.push(user.userId)
-                                    })
-                                } else {
-                                    return console.log("no User subscribed")
-                                }
-                            }).clone()
                             await ActivityData.count({
                                 "block": activity.block,
                                 "type": activity.type,
                                 "isNotified": false,
-
                             }, async (error, totalCount) => {
 
                                 if (error) {

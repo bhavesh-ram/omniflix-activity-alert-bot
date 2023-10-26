@@ -5,9 +5,7 @@ const { ActivityData } = require("../models/activity.model");
 
 
 let activityFetching = async () => {
-    await ActivityData.find({
-
-    }, {}, {
+    await ActivityData.find({}, {}, {
         sort: {
             created_at: 'desc'
         },

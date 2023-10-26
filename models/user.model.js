@@ -23,6 +23,10 @@ var userSchema = mongoose.Schema({
         type: [String],
         default: [],
     },
+    channels: {
+        type: [String],
+        default: [],
+    },
     notificationTypes: {
         type: [String],
         enum: [
@@ -31,7 +35,9 @@ var userSchema = mongoose.Schema({
             'Bulk Listing',
             'Bulk Create Auction',
             'Create Campaign',
-            'End Campaign'
+            'End Campaign',
+            'Interactive Videos',
+            'Channels'
         ],
         default: [], // Default to an empty array for notification types
       },

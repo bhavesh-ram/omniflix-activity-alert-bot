@@ -221,6 +221,20 @@ https://streampay.me/streams/{ACTIVITYNFT_IDID}`,
   url: `https://streampay.me/streams/{ACTIVITYNFT_IDID}`
 }
 
+let NewIVPublishedHelperMsg = {
+  message: ` ***Alert 🚨 Interactive Video Published OmniFlix.tv !***  
+https://omniflix.tv/iv/{IV_ID}`,
+
+  url: `https://omniflix.tv/iv/{IV_ID}`
+}
+
+let NewChannelsHelperMsg = {
+  message: ` ***Alert 🚨 New Channel Created On OmniFlix.tv !***  
+https://omniflix.tv/channel/{CHANNEL_ID}`,
+
+  url: `https://omniflix.tv/channel/{CHANNEL_ID}`
+}
+
 module.exports = {
   StartMsg,
   HelpMsg,
@@ -251,5 +265,8 @@ module.exports = {
 
   streamSendHelperMsg,
   StopStreamMsg,
-  claimStreamedAmountMsg
+  claimStreamedAmountMsg,
+
+  NewIVPublishedHelperMsg,
+  NewChannelsHelperMsg,
 }

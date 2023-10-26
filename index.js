@@ -8,10 +8,14 @@ const { unSubscribeCMD } = require('./src/unsubscribe');
 // uncomment this to fetch data
 
 const { mainSchedulerData } = require('./src/mainJobScheduler');
+const { InteractiveVideoSchedulerData } = require('./src/send_IV_notification');
 const { activityFetch } = require('./src/activityFetching');
+const { interactiveVideoFetch } = require('./src/interactiveVideoFetching');
+const { channelsFetch } = require('./src/channelsFetching');
 const { notificationNotIntrestedIn, toggleHandler, notificationIntrestedIn } = require('./src/notificationNotIntrestedIn');
 const { subscribedCollectionNotification, unSubscribedCollectionNotification } = require('./src/addEnalbeCollection');
 const { changeAddress } = require('./src/addressChange');
+const { subscribedChannelsNotification, unSubscribedChannelsNotification } = require('./src/addOrRemoveChannels');
 
 String.prototype.fmt = function (hash) {
     var string = this, key; for (key in hash) string = string.replace(new RegExp('\\{' + key + '\\}', 'gm'), hash[key]); return string
@@ -60,6 +64,8 @@ bot.command('notinterested', notificationNotIntrestedIn);
 bot.command('interested', notificationIntrestedIn);
 bot.command('addcollection', subscribedCollectionNotification);
 bot.command('removecollection', unSubscribedCollectionNotification);
+bot.command('subscribechannel', subscribedChannelsNotification);
+bot.command('unsubscribechannel', unSubscribedChannelsNotification);
 
 bot.action(/toggle_.+/, toggleHandler)
   
