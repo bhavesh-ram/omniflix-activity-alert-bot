@@ -230,7 +230,7 @@ https://omniflix.tv/iv/{IV_ID}`,
 }
 
 let NewChannelsHelperMsg = {
-  message: `New channel, ***[{CHANNEL_NAME}](https://omniflix.tv/channel/{CHANNEL_ID})*** just got created on OmniFlix.tv
+  message: `New channel, [{CHANNEL_NAME}](https://omniflix.tv/channel/{CHANNEL_ID}) just got created on OmniFlix.tv
 
 https://omniflix.tv/channel/{CHANNEL_ID}`,
 
