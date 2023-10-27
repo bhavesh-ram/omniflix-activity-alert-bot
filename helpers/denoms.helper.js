@@ -1,3 +1,5 @@
+const { Telegraf } = require('telegraf');
+const bot = new Telegraf(process.env.token);
 const { ActivityData } = require("../models/activity.model");
 const { userData } = require('../models/user.model');
 const { transferDenomHelperMsg, updateDenomHelperMsg, createDenomHelperMsg } = require("../src/template.js")

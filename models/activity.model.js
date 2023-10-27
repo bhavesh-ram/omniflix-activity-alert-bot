@@ -3,19 +3,15 @@ var mongoose = require('mongoose');
 const activitySchema = new mongoose.Schema({
     module: {
         type: String,
-        required: true,
     },
     type: {
         type: String,
-        required: true,
     },
     tx_hash: {
         type: String,
-        required: true,
     },
     block: {
         type: Number,
-        required: true,
     },
     id: {
         type: String,
@@ -254,13 +250,9 @@ const activitySchema = new mongoose.Schema({
     },
     created_at: {
         type: Date,
-        required: true,
-        default: new Date(),
     },
     updated_at: {
         type: Date,
-        required: true,
-        default: new Date(),
     },
     isNotified: {
         type: Boolean,

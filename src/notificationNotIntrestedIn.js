@@ -22,7 +22,9 @@ let notificationNotIntrestedIn = async (ctx) => {
         'Bulk Listing',
         'Bulk Create Auction',
         'Create Campaign',
-        'End Campaign'
+        'End Campaign',
+        'Interactive Videos',
+        'Channels'
     ];
 
     const keyboard = notificationTypes.map((type) => {

@@ -1,7 +1,7 @@
-let { bech32 } = require('bech32')
 const { userData } = require("../models/user.model")
 
 let messageCMD = async (ctx) => {
+    console.log(ctx)
     console.time(`Processing update ${ctx.update.message.update_id}`);
     let words = ['chihuahua', 'mantle', 'cosmos', 'osmo', 'secret', 'akash', 'star', 'certik', 'regen', 'persistence', 'sent', 'juno', 'kava', 'stars']
     if (ctx.message.text == '/help' ||
@@ -13,7 +13,7 @@ let messageCMD = async (ctx) => {
         console.log(ctx.message.text)
 
     }else if(!words.includes(ctx.message.text) && !ctx.message.text){
-        // console.log(ctx.message.text)
+        console.log(ctx.message.text)
     }else if (ctx.message.text.slice(0, 8) == 'omniflix') {
         if (parseInt(ctx.message.text.slice(8,).length) != 39) {
             return await ctx.reply('Add a correct OmniFlix address for accurate updates.')
