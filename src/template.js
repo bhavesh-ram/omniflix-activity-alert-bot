@@ -222,14 +222,16 @@ https://streampay.me/streams/{ACTIVITYNFT_IDID}`,
 }
 
 let NewIVPublishedHelperMsg = {
-  message: ` ***Alert 🚨 Interactive Video Published OmniFlix.tv !***  
+  message: `New interactive video titled [{IV_NAME}](https://omniflix.tv/iv/{IV_ID}) by [{CHANNEL_NAME}](https://omniflix.tv/channel/{CHANNEL_ID) just got published on OmniFlix.tv  
+
 https://omniflix.tv/iv/{IV_ID}`,
 
   url: `https://omniflix.tv/iv/{IV_ID}`
 }
 
 let NewChannelsHelperMsg = {
-  message: ` ***Alert 🚨 New Channel Created On OmniFlix.tv !***  
+  message: `New channel, ***[{CHANNEL_NAME}](https://omniflix.tv/channel/{CHANNEL_ID})*** just got created on OmniFlix.tv
+
 https://omniflix.tv/channel/{CHANNEL_ID}`,
 
   url: `https://omniflix.tv/channel/{CHANNEL_ID}`

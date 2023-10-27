@@ -31,7 +31,7 @@ let newIVPublishedHelper = async (interactiveVideo) => {
             return console.log("no User subscribed")
         }
     }).clone()
-    let msg = NewIVPublishedHelperMsg.message.fmt({ IV_ID: interactiveVideo._id });
+    let msg = NewIVPublishedHelperMsg.message.fmt({ IV_ID: interactiveVideo._id, IV_NAME: interactiveVideo.title, CHANNEL_NAME: interactiveVideo.publish_settings.channels[0].name, CHANNEL_ID: interactiveVideo.publish_settings.channels[0]._id });
     let mediaUrl = NewIVPublishedHelperMsg.url.fmt({ IV_ID: interactiveVideo._id });
     user_chatId.forEach(async (chatid) => {
         try {
@@ -77,6 +77,7 @@ let newChannelsHelper = async (Channel) => {
         "isSubscribe": true,
         notificationTypes: { $ne: messageType },
         $or: [
+            {channels: undefined},
             { channels: [] },
             { channels: { $in: [Channel.username, Channel.name] } }
         ]
@@ -93,7 +94,7 @@ let newChannelsHelper = async (Channel) => {
         }
     }).clone()
 
-    let msg = NewChannelsHelperMsg.message.fmt({ CHANNEL_ID: Channel._id });
+    let msg = NewChannelsHelperMsg.message.fmt({ CHANNEL_ID: Channel._id, CHANNEL_NAME: Channel.name });
     let mediaUrl = NewChannelsHelperMsg.url.fmt({ CHANNEL_ID: Channel._id });
     user_chatId.forEach(async (chatid) => {
         try {
