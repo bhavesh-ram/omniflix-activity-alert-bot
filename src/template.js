@@ -1,47 +1,49 @@
-let StartMsg = `Hello {USER_NAME},\nEnter /help To get list of all commands`
+let StartMsg = `Hello {USER_NAME},\nExplore NFTs & Interactive content on #OmniFlix. Enter /help for a list of commands.`
 
 let HelpMsg =
-  `
+  `Connect with @OmniFlix_Alert_bot to stay updated. Type /subscribe to begin.\n
     HERE ARE THE AVAILABLE COMMANDS AND THEIR UTILITY
      /about - About Bot
      /omniflix - About OmniFlix
-	   /subscribe - Subscribe to get the latest NFTs, Auctions, and Collection listings notifications in your inbox.
-	   /unsubscribe - unsubscribe from Alerts/Updates
-     /join - join bot and subscribe to get personal updates of Marketplace
+	   /subscribe - Subscribe to receive the latest alerts on NFTs, auctions, and Interactive Videos right in your inbox.
+	   /unsubscribe - Unsubscribe from Alerts/Updates
+     /join - Join the action! Subscribe to the bot for personalized updates from the OmniFlix Market & OmniFlix TV
+     /interested - Reactivate notifications you've muted.
+     /notinterested - Mute notifications you no longer wish to receive.
+     /changeaddress - Update your OmniFlix address for personalized notifications.
+     /subscribechannel - Receive notifications from a specific OmniFlix TV channel.
+     /unsubscribechannel - Stop getting updates from an OmniFlix TV channel you've followed.
      `
-let aboutBot = `OmniFlix Alert bot helps you get notifications for Auctions, Collections & more on OmniFlix.Market - all in one place.`
-let aboutOmniflix = `OmniFlix is a p2p network for creators & sovereign communities to Mint, manage, distribute and monetize their Intellectual Property and community interactions.`
-let joinBot = `Get in on the NFT action!\nConnect @OmniFlix_Alert_bot to your telegram with the link below.\nType /help or "/subscribe" to finish setup.`
+let aboutBot = `OmniFlix Alert Bot brings all your your activity notifications on OmniFlix Market & OmniFlix TV, in one place.`
+let aboutOmniflix = `OmniFlix is a p2p network for creators & sovereign communities to Mint, manage,\ndistribute and monetize their Intellectual Property and community interactions.`
+let joinBot = `Get in on the NFT action:\nLink up with @OmniFlix_Alert_bot on Telegram. Simply type /help or /subscribe to complete your setup.`
 
 let createAuctionMsg = {
-  message: `***New NFT Auction! Bid now on OmniFlix.Market***  
-Starts:***{START_DATE}***  
-Ends:***{END_DATE}***   
-https://omniflix.market/nft/{ACTIVITYNFT_IDID}`,
+  message: `***New NFT Auction Live!***  
+Starts:***{START_DATE}***,Ends:***{END_DATE}***  
+Bid now: https://omniflix.market/nft/{ACTIVITYNFT_IDID}`,
   url: `https://omniflix.market/nft/{ACTIVITYNFT_IDID} `
 };
 
 
 let cancelAuctionMsg = {
   message: ` ***Auction Cancelled.***  
-https://omniflix.market/nft/{ACTIVITYNFT_IDID}`,
+Details: https://omniflix.market/nft/{ACTIVITYNFT_IDID}`,
   url: `https://omniflix.market/nft/{ACTIVITYNFT_IDID}`
 }
 
 let removeAuctionMsg = {
-  message: ` ***Auction Removed From Marketplace.***  
-https://omniflix.market/nft/{ACTIVITYNFT_IDID}`,
+  message: ` ***Auction Removed From Marketplace. ***`,
   url: `https://omniflix.market/nft/{ACTIVITYNFT_IDID}`
 }
 
 
 
 let processBidAuctionHelperMsg = {
-  auctionWonMsg: ` **Congratulations**  
-  ***You have won the auction that you bid:***     
+  auctionWonMsg: ` ***Congratulations!*** You've won the auction.    
 https://omniflix.market/nft/{ACTIVITYNFT_IDID}`,
 
-  auctionEndMsg: ` ***The auction has Ended:***   
+  auctionEndMsg: ` ***Auction Ended.***   
 https://omniflix.market/nft/{ACTIVITYNFT_IDID}`,
 
   url: `https://omniflix.market/nft/{ACTIVITYNFT_IDID}`
@@ -51,13 +53,13 @@ https://omniflix.market/nft/{ACTIVITYNFT_IDID}`,
 
 
 let placeBidAuctionHelperMsg = {
-  ownerMsg: ` ***Your auction just received a new bid!***     
+  ownerMsg: ` ***Your auction received a new bid!***     
 https://omniflix.market/nft/{NFTID}`,
 
-  bidderMsg: ` ***You have placed a new bid.***  
+  bidderMsg: ` ***You've placed a new bid. Good luck!***  
 https://omniflix.market/nft/{NFTID}`,
 
-  previousBidderMsg: ` ***You have been outbid (i.e. someone has placed a bid higher than yours). ***   
+  previousBidderMsg: ` ***Outbid alert! Time to raise your game!***   
 https://omniflix.market/nft/{NFTID}`,
 
   url: `https://omniflix.market/nft/{NFTID}`
@@ -67,8 +69,8 @@ https://omniflix.market/nft/{NFTID}`,
 
 
 let buyNftHelperMsg = {
-  NftOwnerMsg: ` ***Nft Sold***:  https://omniflix.market/nft/{ACTIVITYNFT_IDID}`,
-  NftBuyerMsg: ` ***You collected a new NFT***  https://omniflix.market/nft/{ACTIVITYNFT_IDID}`,
+  NftOwnerMsg: ` ***NFT Sold:***:  https://omniflix.market/nft/{ACTIVITYNFT_IDID}`,
+  NftBuyerMsg: ` ***New NFT added to your collection!***  https://omniflix.market/nft/{ACTIVITYNFT_IDID}`,
   url: `https://omniflix.market/nft/{ACTIVITYNFT_IDID}`
 
 }
@@ -76,17 +78,17 @@ let buyNftHelperMsg = {
 
 
 let burnNftHelperMsg = {
-  message: ` ***You delisted the following NFT from the marketplace on OmniFlix.market .***  
+  message: ` ***You Burned an NFT from OmniFlix Market.***  
 https://omniflix.market/nft/{ACTIVITYID}`,
   url: `https://omniflix.market/nft/{ACTIVITYID}`
 }
 
 
 let mintONFTHelperMsg = {
-  creatorMsg: `***You have minted a new NFT***  
+  creatorMsg: `***You've minted a new NFT!***  
 https://omniflix.market/nft/{NFTID)`,
 
-  ownerMsg: `***A new NFT was minted into your account***  
+  ownerMsg: `***A new NFT has been minted into your account.***  
 https://omniflix.market/nft/{NFTID}`,
 
   url: `https://omniflix.market/nft/{NFTID}`
@@ -95,12 +97,10 @@ https://omniflix.market/nft/{NFTID}`,
 }
 
 let transferDenomHelperMsg = {
-  senderMsg: `***You have transferred the below collection to***  
-{ACTIVITYDATARECIPIENT}  
+  senderMsg: `***You transferred a collection to*** {ACTIVITYDATARECIPIENT}.  
 https://omniflix.market/collection/{DENOMID}`,
 
-  receiverMsg: `***You have received the below collection from ***   
-{ACTIVITYDATACREATOR}  
+  receiverMsg: `***You received a collection from*** {ACTIVITYDATACREATOR}.  
 https://omniflix.market/collection/{DENOMID}`,
 
   url: `https://omniflix.market/collection/{DENOMID}`
@@ -109,16 +109,16 @@ https://omniflix.market/collection/{DENOMID}`,
 }
 
 let createDenomHelperMsg = {
-  message: `***Your collection has been created.***  
-**Symbol:  {SYMBOL}**  
-**Name:  {NAME} **  
-https://omniflix.market/collection/{DENOMID}`,
+  message: `***Your collection is live!***  
+Symbol:  {SYMBOL}  
+Name:  {NAME}.  
+View it: https://omniflix.market/collection/{DENOMID}`,
 
   url: `https://omniflix.market/collection/{DENOMID}`
 }
 
 let updateDenomHelperMsg = {
-  message: `***Your collection has been updated.***  
+  message: `***Collection Updated!***  
 **Symbol:  {SYMBOL}**  
 **Name:  {NAME} **  
 https://omniflix.market/collection/{DENOMID}`,
@@ -128,7 +128,7 @@ https://omniflix.market/collection/{DENOMID}`,
 
 
 let listingHelperMsg = {
-  message: ` ***Alert 🚨 Fresh listing on OmniFlix.market !***  
+  message: ` ***New Listing Alert! ***Check out the latest on OmniFlix Market:  
 https://omniflix.market/nft/{ACTIVITYNFT_IDID}`,
 
   url: `https://omniflix.market/nft/{ACTIVITYNFT_IDID}`
@@ -136,7 +136,7 @@ https://omniflix.market/nft/{ACTIVITYNFT_IDID}`,
 
 
 let delistingHelperMsg = {
-  message: ` *** You have delisted the below NFT from OmniFlix Market.***  
+  message: ` ***You delisted an NFT from OmniFlix Market.***  
 https://omniflix.market/nft/{ACTIVITYNFT_IDID}`,
 
   url: `https://omniflix.market/nft/{ACTIVITYNFT_IDID}`
@@ -145,10 +145,10 @@ https://omniflix.market/nft/{ACTIVITYNFT_IDID}`,
 
 
 let transferNftHelperMsg = {
-  senderMsg: ` ***You have transferred the below NFT..***  
+  senderMsg: ` ***You transferred an NFT.***  
 https://omniflix.market/nft/{ACTIVITYID}`,
 
-  receiverMsg: ` ***You have received an NFT***  
+  receiverMsg: ` ***You received an NFT!***  
 https://omniflix.market/nft/{ACTIVITYID}`,
 
 url:`https://omniflix.market/nft/{ACTIVITYID}`
@@ -158,8 +158,8 @@ url:`https://omniflix.market/nft/{ACTIVITYID}`
 
 
 let createCampaignMsg = {
-  message: `***New Campaign Created on OmniFlix.Market***  
-Starts:***{START_DATE}***  
+  message: `***New Campaign created on OmniFlix!***  
+Starts:***{START_DATE}***,  
 Ends:***{END_DATE}***   
 https://omniflix.market/campaign/{ACTIVITYNFT_IDID}`,
   url: `https://omniflix.market/campaign/{ACTIVITYNFT_IDID} `
@@ -172,7 +172,7 @@ https://omniflix.market/campaign/{ACTIVITYNFT_IDID}`,
 }
 
 let depositCampaignMsg = {
-  message: ` ***Deposit Campaign.***  
+  message: ` ***Campaign Deposit made.***  
 https://omniflix.market/campaign/{ACTIVITYNFT_IDID}`,
   url: `https://omniflix.market/campaign/{ACTIVITYNFT_IDID}`
 }
@@ -190,39 +190,39 @@ https://omniflix.market/campaign/{ACTIVITYNFT_IDID}`,
 }
 
 let campaignTransferNftHelperMsg = {
-  senderMsg: ` ***You have transferred the below NFT..***  
+  senderMsg: ` ***ou transferred an NFT.***  
 https://omniflix.market/nft/{ACTIVITYID}`,
 
-  receiverMsg: ` ***You have received an NFT***  
+  receiverMsg: ` ***You received an NFT.***  
 https://omniflix.market/nft/{ACTIVITYID}`,
 
 url:`https://omniflix.market/nft/{ACTIVITYID}`
 }
 
 let streamSendHelperMsg = {
-  senderMsg: ` ***You have Send Below Stream..***  
+  senderMsg: ` ***You sent a Stream.***  
 https://streampay.me/streams/{ACTIVITYID}`,
 
-  receiverMsg: ` ***You have received a Stream on Streampay.me***  
+  receiverMsg: ` ***You received a Stream.***  
 https://streampay.me/streams/{ACTIVITYID}`,
 
 url:`https://streampay.me/streams/{ACTIVITYID}`
 }
 
 let StopStreamMsg = {
-  message: ` ***It Seems You Stopped Below Stream.***  
+  message: ` ***Stream Stopped. See details:***  
 https://streampay.me/streams/{ACTIVITYNFT_IDID}`,
   url: `https://streampay.me/streams/{ACTIVITYNFT_IDID}`
 }
 
 let claimStreamedAmountMsg = {
-  message: ` ***You Claimed Amount from Stream below.***  
+  message: ` ***You claimed {AMOUNT} FLIX from a Stream.***  
 https://streampay.me/streams/{ACTIVITYNFT_IDID}`,
   url: `https://streampay.me/streams/{ACTIVITYNFT_IDID}`
 }
 
 let NewIVPublishedHelperMsg = {
-  message: `New interactive video titled [{IV_NAME}](https://omniflix.tv/iv/{IV_ID}) by [{CHANNEL_NAME}](https://omniflix.tv/channel/{CHANNEL_ID) just got published on OmniFlix.tv  
+  message: `New Interactive Video: [{IV_NAME}](https://omniflix.tv/iv/{IV_ID}) by [{CHANNEL_NAME}](https://omniflix.tv/channel/{CHANNEL_ID) published on OmniFlix.tv!  
 
 https://omniflix.tv/iv/{IV_ID}`,
 
@@ -230,7 +230,7 @@ https://omniflix.tv/iv/{IV_ID}`,
 }
 
 let NewChannelsHelperMsg = {
-  message: `New channel, [{CHANNEL_NAME}](https://omniflix.tv/channel/{CHANNEL_ID}) just got created on OmniFlix.tv
+  message: `New Channel Alert: [{CHANNEL_NAME}](https://omniflix.tv/channel/{CHANNEL_ID}) now on OmniFlix.tv!
 
 https://omniflix.tv/channel/{CHANNEL_ID}`,
 

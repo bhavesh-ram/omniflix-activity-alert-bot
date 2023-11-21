@@ -12,7 +12,7 @@ String.prototype.fmt = function (hash) {
 let listingHelper = async (activity) => {
     let messageType;
     if (activity.type === 'MsgListNFT') {
-        messageType = 'List NFT'
+        messageType = 'NFT Listings'
     }
 
     console.log(messageType)

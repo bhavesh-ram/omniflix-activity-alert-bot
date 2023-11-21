@@ -11,7 +11,7 @@ String.prototype.fmt = function (hash) {
 let MsgCreateCampaignHelper = async (activity) => {
     let messageType;
     if (activity.type === 'MsgCreateCampaignHelper') {
-        messageType = "Create Campaign"
+        messageType = "Campaign Creation"
     }
     let user_chatId = []
     await userData.find({
@@ -857,7 +857,7 @@ let MsgClaimStreamedAmountHelper = async (activity) => {
 
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
 
-        let msg = claimStreamedAmountMsg.message.fmt({ ACTIVITYNFT_IDID: activity.id })
+        let msg = claimStreamedAmountMsg.message.fmt({ ACTIVITYNFT_IDID: activity.id, AMOUNT: (activity.amount.amount / 1000000) })
         let mediaUrl = claimStreamedAmountMsg.url.fmt({ ACTIVITYNFT_IDID: activity.id })
 
         try {

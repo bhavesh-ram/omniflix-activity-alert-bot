@@ -10,7 +10,7 @@ String.prototype.fmt = function (hash) {
 }
 
 let newIVPublishedHelper = async (interactiveVideo) => {
-    let messageType = 'Interactive Videos'
+    let messageType = 'New Interactive Content'
     let user_chatId = []
     await userData.find({
         "isSubscribe": true,
@@ -71,7 +71,7 @@ let newIVPublishedHelper = async (interactiveVideo) => {
 };
 
 let newChannelsHelper = async (Channel) => {
-    let messageType = 'Channels'
+    let messageType = 'New Channels'
     let user_chatId = []
     await userData.find({
         "isSubscribe": true,
