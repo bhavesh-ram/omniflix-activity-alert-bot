@@ -108,7 +108,6 @@ let MainScheduler = async () => {
                                     
                                 } else {
                                     if (activity.type == "MsgListNFT" || activity.type == "MsgCreateAuction") {
-
                                         let denom = activity.denom_id.id ? activity.denom_id.id : activity.denom.id;
                                         if (verifiedCollection.includes(denom)) {
                                             if (activity.type == "MsgCreateAuction") {
@@ -232,7 +231,7 @@ let MainScheduler = async () => {
     }
 }
 
-let mainSchedulerData = cron.schedule('*/10 * * * * *', MainScheduler)
+let mainSchedulerData = cron.schedule('* * * * * *', MainScheduler)
 
 module.exports = {
     mainSchedulerData

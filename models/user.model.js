@@ -30,14 +30,14 @@ var userSchema = mongoose.Schema({
     notificationTypes: {
         type: [String],
         enum: [
-            'Create Auction',
-            'List NFT',
-            'Bulk Listing',
-            'Bulk Create Auction',
-            'Create Campaign',
+            'New Auction Creation',
+            'NFT Listings',
+            'Multiple NFT Listings',
+            'Multiple Auctions Creation',
+            'Campaign Creation',
             'End Campaign',
-            'Interactive Videos',
-            'Channels'
+            'New Interactive Content',
+            'New Channels'
         ],
         default: [], // Default to an empty array for notification types
       },

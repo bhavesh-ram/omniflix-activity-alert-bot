@@ -15,7 +15,7 @@ String.prototype.fmt = function (hash) {
 let createAuctionHelper = async (activity) => {
     let messageType;
     if (activity.type === 'MsgCreateAuction') {
-        messageType = "Create Auction"
+        messageType = "New Auction Creation"
     }
     // console.log(activities)
     let user_chatId = []

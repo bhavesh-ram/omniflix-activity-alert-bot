@@ -106,7 +106,7 @@ let bulkListingNft = async (activity, totalCount) => {
     
     let messageType;
     if(activity.type === 'MsgListNFT') {
-        messageType = 'Bulk Listing';
+        messageType = 'Multiple NFT Listings';
     }
     // console.log(activities)
     let user_chatId = []
@@ -271,7 +271,7 @@ let bulkAuction = async (activity, totalCount) => {
     let msg = ` **${totalCount}** ***New Bulk Auction Listed On MarketPlace.***  https://omniflix.market/nft`
     let messageType;
     if(activity.type === 'MsgCreateAuction') {
-        messageType = 'Bulk Create Auction';
+        messageType = 'Multiple Auctions Creation';
     }
     // console.log(activities)
     let user_chatId = []

@@ -17,14 +17,14 @@ let notificationNotIntrestedIn = async (ctx) => {
       }
     
     const notificationTypes = [
-        'Create Auction',
-        'List NFT',
-        'Bulk Listing',
-        'Bulk Create Auction',
-        'Create Campaign',
+        'New Auction Creation',
+        'NFT Listings',
+        'Multiple NFT Listings',
+        'Multiple Auctions Creation',
+        'Campaign Creation',
         'End Campaign',
-        'Interactive Videos',
-        'Channels'
+        'New Interactive Content',
+        'New Channels'
     ];
 
     const keyboard = notificationTypes.map((type) => {
@@ -33,7 +33,7 @@ let notificationNotIntrestedIn = async (ctx) => {
       });
     
       const replyMarkup = Markup.inlineKeyboard(keyboard);
-      ctx.reply('Click notification your not intrested!:',replyMarkup);
+      ctx.reply('Select which notifications you’d like to turn back on',replyMarkup);
 }
 
 
@@ -66,7 +66,7 @@ let toggleHandler = async (ctx) => {
         ctx.deleteMessage();
 
         // Inform the user about the update
-        ctx.reply(`Notification preferences updated successfully.\n\n Please run the command again if you wish Add other types of notifications as well!!`);
+        ctx.reply(`Notification Preferences Saved.\n To modify further, simply run the command again!`);
 
 
     } else if (/^toggle_/.test(callbackData)) {
@@ -93,7 +93,7 @@ let toggleHandler = async (ctx) => {
         ctx.deleteMessage();
 
         // Inform the user about the update
-        ctx.reply(`Notification preferences updated successfully.\n\n Please run the command again if you wish remove other types of notifications as well!!`);
+        ctx.reply(`Notification Preferences Saved.\n To modify further, simply run the command again!`);
         
         
 
