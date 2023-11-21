@@ -231,7 +231,7 @@ let MainScheduler = async () => {
     }
 }
 
-let mainSchedulerData = cron.schedule('* * * * * *', MainScheduler)
+let mainSchedulerData = cron.schedule('*/15 * * * * *', MainScheduler)
 
 module.exports = {
     mainSchedulerData

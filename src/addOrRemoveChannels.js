@@ -13,7 +13,7 @@ const subscribedChannelsNotification = async (ctx) => {
         let channelId;
         let channel = await channelsData.findOne({ $or: [ { name: channelName },{ username: channelName } ] });
         if (channel) {
-            channelId = channel._id;
+            channelId = channel.username;
         } else {
             ctx.reply(`Invalid Channel Name ${channelName}. Please Enter a Valid Channel Name or Channel Id.`);
         }
