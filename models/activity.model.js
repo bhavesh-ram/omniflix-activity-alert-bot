@@ -248,6 +248,30 @@ const activitySchema = new mongoose.Schema({
     flixdrop: {
         type: Boolean,
     },
+    ibc_in: {
+        type: Object,
+    },
+    ibc_out: {
+        type: Object,
+    },
+    uri: {
+        type: String,
+    },
+    uri_hash: {
+        type: String,
+    },
+    original_media_uri: {
+        type: String,
+    },
+    is_native: {
+        type: Boolean,
+    },
+    is_away: {
+        type: Boolean,
+    },
+    is_listed: {
+        type: Boolean,
+    },
     created_at: {
         type: Date,
     },
@@ -256,7 +280,6 @@ const activitySchema = new mongoose.Schema({
     },
     isNotified: {
         type: Boolean,
-        default: false,
     }
 });
 
