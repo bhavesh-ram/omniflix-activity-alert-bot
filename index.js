@@ -12,6 +12,7 @@ const { InteractiveVideoSchedulerData } = require('./src/send_IV_notification');
 const { activityFetch } = require('./src/activityFetching');
 const { interactiveVideoFetch } = require('./src/interactiveVideoFetching');
 const { channelsFetch } = require('./src/channelsFetching');
+const { tipFetching } = require('./src/tipsFetching')
 const { notificationNotIntrestedIn, toggleHandler, notificationIntrestedIn } = require('./src/notificationNotIntrestedIn');
 const { subscribedCollectionNotification, unSubscribedCollectionNotification } = require('./src/addEnalbeCollection');
 const { changeAddress } = require('./src/addressChange');

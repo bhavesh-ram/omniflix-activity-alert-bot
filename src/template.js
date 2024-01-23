@@ -237,6 +237,17 @@ https://omniflix.tv/channel/{CHANNEL_ID}`,
   url: `https://omniflix.tv/channel/{CHANNEL_ID}`
 }
 
+let ReceivedTipOnChannelMsg = {
+  message: ` ***You Received {AMOUNT} FLIX as Tip on {CHANNEL_USERNAME}***`,
+}
+
+let ReceivedTipOnIVMsg = {
+  message: ` ***You Received {AMOUNT} FLIX as Tip on [{IV_NAME}](https://omniflix.tv/iv/{IV_ID})***   
+  https://omniflix.tv/iv/{IV_ID}`,
+
+  url: `https://omniflix.tv/iv/{IV_ID}`
+}
+
 module.exports = {
   StartMsg,
   HelpMsg,
@@ -271,4 +282,7 @@ module.exports = {
 
   NewIVPublishedHelperMsg,
   NewChannelsHelperMsg,
+
+  ReceivedTipOnChannelMsg,
+  ReceivedTipOnIVMsg
 }

@@ -1,9 +1,6 @@
-let request = require("request")
 var cron = require('node-cron');
-const dotenv = require('dotenv').config()
 const { interactiveVideoData } = require("../models/interactive_video.model");
 const { channelsData } = require("../models/channels.model");
-const { userData } = require('../models/user.model');
 const { newIVPublishedHelper, newChannelsHelper } = require("../helpers/interactiveVideoNotification.helper");
 
 let InteractiveVideoScheduler = async () => {
@@ -48,7 +45,7 @@ let ChannelScheduler = async () => {
     })
 };
 let InteractiveVideoSchedulerData = cron.schedule('*/15 * * * * *', InteractiveVideoScheduler);
-let ChannelSchedulerData = cron.schedule('0 * * * * *', ChannelScheduler);
+let ChannelSchedulerData = cron.schedule('*/10 * * * * *', ChannelScheduler);
 
 module.exports = {
     InteractiveVideoSchedulerData,
