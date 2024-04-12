@@ -82,7 +82,7 @@ let createAuctionHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
     })
@@ -160,7 +160,7 @@ let cancelAuctionHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 
@@ -233,7 +233,7 @@ let removeAuctionHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 
@@ -338,7 +338,7 @@ let processBidAuctionHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 
@@ -395,7 +395,7 @@ let processBidAuctionHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 
@@ -480,7 +480,7 @@ let placeBidAuctionHelper = async (activity) => {
                             $set: { isSubscribe: false }
                         })
                     } else {
-                        throw e;
+                        console.log(e);
                     }
                 }
             })
@@ -532,7 +532,7 @@ let placeBidAuctionHelper = async (activity) => {
                             $set: { isSubscribe: false }
                         })
                     } else {
-                        throw e;
+                        console.log(e);
                     }
                 }
             })
@@ -588,7 +588,7 @@ let placeBidAuctionHelper = async (activity) => {
                                     $set: { isSubscribe: false }
                                 })
                             } else {
-                                throw e;
+                                console.log(e);
                             }
                         }
                     }

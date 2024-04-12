@@ -59,7 +59,7 @@ let MsgCreateCampaignHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
     })
@@ -122,7 +122,7 @@ let MsgCancelCampaignHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 
@@ -196,7 +196,7 @@ let MsgDepositCampaignHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 
@@ -276,7 +276,7 @@ let endCampaignHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
     })
@@ -347,7 +347,7 @@ let MsgClaimCampaignHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 
@@ -452,7 +452,7 @@ let campaignTransferNftHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 
@@ -493,7 +493,7 @@ let campaignTransferNftHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 
@@ -583,7 +583,7 @@ let MsgStreamSendHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 
@@ -624,7 +624,7 @@ let MsgStreamSendHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 
@@ -714,7 +714,7 @@ let MsgStreamCreatedHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 
@@ -755,7 +755,7 @@ let MsgStreamCreatedHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 
@@ -830,7 +830,7 @@ let MsgStopStreamHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 
@@ -904,7 +904,7 @@ let MsgClaimStreamedAmountHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 

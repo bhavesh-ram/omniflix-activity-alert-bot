@@ -74,7 +74,19 @@ bot.action(/selectg_.+/, guideHandler)
 bot.action(/toggle_.+/, toggleHandler)
 
 bot.on('message', messageCMD )
-bot.launch();
+const launch = async (bot) => {
+    bot.launch()
+        .then(() => {
+            console.log('Bot is connected');
+        })
+        .catch(()=> {
+            console.log('Bot is not connected. Network Issue');
+            setTimeout(()=> {
+                launch(bot);
+            }, 10000)
+        })
+}
+launch(bot);
 console.log("App is running")
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));

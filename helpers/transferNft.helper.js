@@ -76,7 +76,7 @@ let transferNftHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 
@@ -117,7 +117,7 @@ let transferNftHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 

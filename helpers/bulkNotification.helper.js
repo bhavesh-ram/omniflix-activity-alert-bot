@@ -29,7 +29,7 @@ let bulkMinting = async (activity, totalCount) => {
                         $set: { isSubscribe: false }
                     })
                 } else {
-                    throw e;
+                    console.log(e);
                 }
             }
         } else {
@@ -79,7 +79,7 @@ let bulkTransfer = async (activity, totalCount) => {
                         $set: { isSubscribe: false }
                     })
                 } else {
-                    throw e;
+                    console.log(e);
                 }
             }
         } else {
@@ -144,7 +144,7 @@ let bulkListingNft = async (activity, totalCount) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
     })
@@ -200,7 +200,7 @@ let bulkDeListingNft = async (activity, totalCount) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
         await ActivityData.updateMany({
@@ -244,7 +244,7 @@ let bulkBurnNft = async (activity, totalCount) => {
                         $set: { isSubscribe: false }
                     })
                 } else {
-                    throw e;
+                    console.log(e);
                 }
             }
         } else {
@@ -308,7 +308,7 @@ let bulkAuction = async (activity, totalCount) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
     })
@@ -351,7 +351,7 @@ let bulkAuctionCancel = async (activity, totalCount, user_chatId) => {
                         $set: { isSubscribe: false }
                     })
                 } else {
-                    throw e;
+                    console.log(e);
                 }
             }
         } else {
@@ -397,7 +397,7 @@ let bulkAuctionRemoved = async (activity, totalCount, user_chatId) => {
                         $set: { isSubscribe: false }
                     })
                 } else {
-                    throw e;
+                    console.log(e);
                 }
             }
         } else {
@@ -446,7 +446,7 @@ let bulkProcessBid = async (activity, totalCount) => {
                         $set: { isSubscribe: false }
                     })
                 } else {
-                    throw e;
+                    console.log(e);
                 }
             }
         } else {
@@ -494,7 +494,7 @@ let bulkPlaceBid = async (activity, totalCount) => {
                         $set: { isSubscribe: false }
                     })
                 } else {
-                    throw e;
+                    console.log(e);
                 }
             }
         } else {
@@ -542,7 +542,7 @@ let bulkBuyNft = async (activity, totalCount) => {
                         $set: { isSubscribe: false }
                     })
                 } else {
-                    throw e;
+                    console.log(e);
                 }
             }
         } else {
@@ -592,7 +592,7 @@ let bulkCreateCollection = async (activity, totalCount) => {
                         $set: { isSubscribe: false }
                     })
                 } else {
-                    throw e;
+                    console.log(e);
                 }
             }
         } else {
@@ -642,7 +642,7 @@ let bulkTransferCollection = async (activity, totalCount) => {
                         $set: { isSubscribe: false }
                     })
                 } else {
-                    throw e;
+                    console.log(e);
                 }
             }
         } else {
@@ -690,7 +690,7 @@ let bulkUpdateCollection = async (activity, totalCount) => {
                         $set: { isSubscribe: false }
                     })
                 } else {
-                    throw e;
+                    console.log(e);
                 }
             }
         } else {
@@ -740,7 +740,7 @@ let bulkCreateCampaign = async (activity, totalCount) => {
                         $set: { isSubscribe: false }
                     })
                 } else {
-                    throw e;
+                    console.log(e);
                 }
             }
         } else {
@@ -790,7 +790,7 @@ let bulkCancelCampaign = async (activity, totalCount) => {
                         $set: { isSubscribe: false }
                     })
                 } else {
-                    throw e;
+                    console.log(e);
                 }
             }
         } else {
@@ -840,7 +840,7 @@ let bulkDepositCampaign = async (activity, totalCount) => {
                         $set: { isSubscribe: false }
                     })
                 } else {
-                    throw e;
+                    console.log(e);
                 }
             }
         } else {
@@ -890,7 +890,7 @@ let bulkEndCampaign = async (activity, totalCount) => {
                         $set: { isSubscribe: false }
                     })
                 } else {
-                    throw e;
+                    console.log(e);
                 }
             }
         } else {

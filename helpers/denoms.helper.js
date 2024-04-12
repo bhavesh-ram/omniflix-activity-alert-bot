@@ -55,7 +55,7 @@ let createDenomHelper = async (activity) => {
                             $set: { isSubscribe: false }
                         })
                     } else {
-                        throw e;
+                        console.log(e);
                     }
                 }
             })
@@ -122,7 +122,7 @@ let transferDenomHelper = async (activity) => {
                             $set: { isSubscribe: false }
                         })
                     } else {
-                        throw e;
+                        console.log(e);
                     }
                 }
             })           
@@ -156,7 +156,7 @@ let transferDenomHelper = async (activity) => {
                             $set: { isSubscribe: false }
                         })
                     } else {
-                        throw e;
+                        console.log(e);
                     }
                 }
 
@@ -225,7 +225,7 @@ let updateDenomHelper = async (activity) => {
                             $set: { isSubscribe: false }
                         })
                     } else {
-                        throw e;
+                        console.log(e);
                     }
                 }
             })

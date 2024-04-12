@@ -69,7 +69,7 @@ let listingHelper = async (activity) => {
                             bot.telegram.sendPhoto(chatid, previewUrl, options)
                         }, 3*1000)
                     } else {
-                        throw e;
+                        console.log(e);
                     }
                 })
             }
@@ -83,7 +83,7 @@ let listingHelper = async (activity) => {
                             bot.telegram.sendMessage(chatid, msg, options)
                         }, 3*1000)
                     } else {
-                        throw e;
+                        console.log(e);
                     }
                 })
             }
@@ -94,7 +94,7 @@ let listingHelper = async (activity) => {
                     userId: chatid
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
     })
@@ -165,7 +165,7 @@ let deListingHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 

@@ -86,7 +86,7 @@ let buyNftHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 
@@ -131,7 +131,7 @@ let buyNftHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 
@@ -196,7 +196,7 @@ let burnNftHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 
@@ -279,7 +279,7 @@ let mintONFTHelper = async (activity) => {
                             $set: { isSubscribe: false }
                         })
                     } else {
-                        throw e;
+                        console.log(e);
                     }
                 }
 
@@ -328,7 +328,7 @@ let mintONFTHelper = async (activity) => {
                             $set: { isSubscribe: false }
                         })
                     } else {
-                        throw e;
+                        console.log(e);
                     }
                 }
 
@@ -392,7 +392,7 @@ let burnNftClaimHelper = async (activity) => {
                     $set: { isSubscribe: false }
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
 

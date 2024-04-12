@@ -52,7 +52,7 @@ let newIVPublishedHelper = async (interactiveVideo) => {
                     userId: chatid
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
     })
@@ -115,7 +115,7 @@ let newChannelsHelper = async (Channel) => {
                     userId: chatid
                 })
             } else {
-                throw e;
+                console.log(e);
             }
         }
     })
