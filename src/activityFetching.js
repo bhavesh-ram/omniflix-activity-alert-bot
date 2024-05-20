@@ -37,10 +37,15 @@ let activityFetching = async () => {
                             } else {
                                 // await ActivityData.insertOne(activity)
                                 activity.isNotified=false
-                                let activityd = new ActivityData(activity)
+                                delete activity.__v
+                                let activityd
+                                try{
+                                    activityd = new ActivityData(activity)
+                                    activityd.save()
+                                } catch(e){
+                                    console.log(e, activity)
+                                }
                                 // console.log(activityd)
-                                activityd.save()
-
                             }
                         })
                     })

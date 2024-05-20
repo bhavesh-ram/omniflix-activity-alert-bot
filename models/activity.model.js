@@ -13,6 +13,9 @@ const activitySchema = new mongoose.Schema({
     block: {
         type: Number,
     },
+    _id: {
+        type: mongoose.Schema.Types.ObjectId,
+    },
     id: {
         type: String,
     },
@@ -118,7 +121,7 @@ const activitySchema = new mongoose.Schema({
         type: String,
     },
     auction_id: {
-        type: Object,
+        type: String,
     },
     amount: {
         denom: {
@@ -166,6 +169,9 @@ const activitySchema = new mongoose.Schema({
         amount: {
             type: Number,
         },
+    },
+    minted_tokens: {
+        type: Number,
     },
     nft_mint_details: {
         type: Object,
@@ -227,6 +233,10 @@ const activitySchema = new mongoose.Schema({
         type: Number,
     },
     periods: {
+        type: mongoose.Schema.Types.Mixed,
+        default: [],
+    },
+    royalty_receivers: {
         type: mongoose.Schema.Types.Mixed,
         default: [],
     },

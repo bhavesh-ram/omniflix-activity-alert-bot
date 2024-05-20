@@ -24,7 +24,7 @@ let createAuctionHelper = async (activity) => {
         notificationTypes: { $ne: messageType },
         $or: [
             { collections: [] },
-            { collections: activity.denom_id.id }
+            { collections: activity.denom_id }
         ]
     }, async (error, result) => {
         if (error) {
@@ -41,8 +41,8 @@ let createAuctionHelper = async (activity) => {
     console.log(user_chatId)
 
 
-    let msg = createAuctionMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id, START_DATE: date.format(activity.start_time, 'ddd MMM YYYY at HH:MM [UTC]'), END_DATE: date.format(activity.end_time, 'ddd MMM YYYY at HH:MM [UTC]') })
-    let mediaUrl = createAuctionMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
+    let msg = createAuctionMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id, START_DATE: date.format(activity.start_time, 'ddd MMM YYYY at HH:MM [UTC]'), END_DATE: date.format(activity.end_time, 'ddd MMM YYYY at HH:MM [UTC]') })
+    let mediaUrl = createAuctionMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id })
     user_chatId.forEach(async (chatid) => {
         // console.log(user_chatId)
 
@@ -122,10 +122,10 @@ let cancelAuctionHelper = async (activity) => {
 
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
 
-        let msg = cancelAuctionMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
-        let mediaUrl = cancelAuctionMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
+        let msg = cancelAuctionMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id })
+        let mediaUrl = cancelAuctionMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id })
         try {
-            if(activity.nft_id.nsfw){
+            if(activity.nft.nsfw){
                 let previewUrl = 'https://f4.omniflix.market/assets/logos/og_image.png'
                 bot.telegram.sendPhoto(user_chatIdOwner, previewUrl, {
                     caption: msg,
@@ -211,8 +211,8 @@ let removeAuctionHelper = async (activity) => {
 
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
 
-        let msg = removeAuctionMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
-        let mediaUrl = removeAuctionMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
+        let msg = removeAuctionMsg.message.fmt({ ACTIVITYNFT_IDID: activity.nft_id })
+        let mediaUrl = removeAuctionMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id })
         try {
             bot.telegram.sendMessage(user_chatIdOwner, msg, {
                 parse_mode: 'Markdown',
@@ -300,10 +300,10 @@ let processBidAuctionHelper = async (activity) => {
 
     if (user_omniflixAddressBidder != undefined && user_chatIdBidder != undefined) {
 
-        let msg = processBidAuctionHelperMsg.auctionWonMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
-        let mediaUrl = processBidAuctionHelperMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
+        let msg = processBidAuctionHelperMsg.auctionWonMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id })
+        let mediaUrl = processBidAuctionHelperMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id })
         try {
-            if (activity.nft_id.nsfw){
+            if (activity.nft.nsfw){
                 let previewUrl = 'https://f4.omniflix.market/assets/logos/og_image.png'
                 bot.telegram.sendPhoto(user_chatIdBidder, previewUrl, {
                     caption: msg,
@@ -357,10 +357,10 @@ let processBidAuctionHelper = async (activity) => {
 
     if (user_omniflixAddressOwner != undefined && user_chatIdOwner != undefined) {
 
-        let msg = processBidAuctionHelperMsg.auctionEndMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
-        let mediaUrl = processBidAuctionHelperMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id.id })
+        let msg = processBidAuctionHelperMsg.auctionEndMsg.fmt({ ACTIVITYNFT_IDID: activity.nft_id })
+        let mediaUrl = processBidAuctionHelperMsg.url.fmt({ ACTIVITYNFT_IDID: activity.nft_id })
         try {
-            if (activity.nft_id.nsfw){
+            if (activity.nft.nsfw){
                 let previewUrl = 'https://f4.omniflix.market/assets/logos/og_image.png'
                 bot.telegram.sendPhoto(user_chatIdOwner, previewUrl, {
                     caption: msg,
@@ -431,21 +431,21 @@ let placeBidAuctionHelper = async (activity) => {
             console.log("Activity not found")
         }
 
-        let nftId = activityData.nft_id.id;
+        let nftId = activityData.nft_id;
 
         let ownerData = await userData.find({
             isSubscribe: true,
-            omniflixAddress: activityData.nft_id.owner
+            omniflixAddress: activityData.nft.owner
         })
 
         if (ownerData.length) {
 
             ownerData.forEach(async (data) => {
 
-                let ownerMsg = placeBidAuctionHelperMsg.ownerMsg.fmt({ NFTID: nftId })
-                let mediaUrl = placeBidAuctionHelperMsg.url.fmt({ NFTID: nftId })
+                let ownerMsg = placeBidAuctionHelperMsg.ownerMsg.fmt({ NFTID: activityData.nft_id })
+                let mediaUrl = placeBidAuctionHelperMsg.url.fmt({ NFTID: activityData.nft_id })
                 try {
-                    if (activity.nft_id.nsfw){
+                    if (activity.nft.nsfw){
                         let previewUrl = 'https://f4.omniflix.market/assets/logos/og_image.png'
                         bot.telegram.sendPhoto(data.userId, previewUrl, {
                             caption: msg,
@@ -497,7 +497,7 @@ let placeBidAuctionHelper = async (activity) => {
                 let bidderMsg = placeBidAuctionHelperMsg.bidderMsg.fmt({ NFTID: nftId })
                 let mediaUrl = placeBidAuctionHelperMsg.url.fmt({ NFTID: nftId })
                 try {
-                    if (activity.nft_id.nsfw){
+                    if (activity.nft.nsfw){
                         let previewUrl = 'https://f4.omniflix.market/assets/logos/og_image.png'
                         bot.telegram.sendPhoto(data.userId, previewUrl, {
                             caption: msg,
@@ -550,10 +550,10 @@ let placeBidAuctionHelper = async (activity) => {
             if (previousBidderData.length) {
                 previousBidderData.forEach(async (data) => {
                     if (previousBidderData) {
-                        let previousBidderMsg = placeBidAuctionHelperMsg.previousBidderMsg.fmt({ NFTID: nftId })
-                        let mediaUrl = placeBidAuctionHelperMsg.url.fmt({ NFTID: nftId })
+                        let previousBidderMsg = placeBidAuctionHelperMsg.previousBidderMsg.fmt({ NFTID: activityData.nft_id })
+                        let mediaUrl = placeBidAuctionHelperMsg.url.fmt({ NFTID: activityData.nft_id })
                         try {
-                            if (activity.nft_id.nsfw){
+                            if (activity.nft.nsfw){
                                 let previewUrl = 'https://f4.omniflix.market/assets/logos/og_image.png'
                                 bot.telegram.sendPhoto(data.userId, previewUrl, {
                                     caption: msg,

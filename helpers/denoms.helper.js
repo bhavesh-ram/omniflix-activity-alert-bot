@@ -2,7 +2,7 @@ const { Telegraf } = require('telegraf');
 const bot = new Telegraf(process.env.token);
 const { ActivityData } = require("../models/activity.model");
 const { userData } = require('../models/user.model');
-const { transferDenomHelperMsg, updateDenomHelperMsg, createDenomHelperMsg } = require("../src/template.js")
+const { transferDenomHelperMsg, updateDenomHelperMsg, createDenomHelperMsg, escapeMarkdown } = require("../src/template.js")
 
 String.prototype.fmt = function (hash) {
     var string = this, key; for (key in hash) string = string.replace(new RegExp('\\{' + key + '\\}', 'gm'), hash[key]); return string
@@ -26,8 +26,8 @@ let createDenomHelper = async (activity) => {
             omniflixAddress: activityData.creator
         })
 
-        let symbol = activityData.symbol;
-        let name = activityData.name;
+        let symbol = escapeMarkdown(activityData.symbol);
+        let name = escapeMarkdown(activityData.name);
 
         if (ownerData.length) {
 
@@ -196,8 +196,8 @@ let updateDenomHelper = async (activity) => {
             omniflixAddress: activityData.creator
         })
 
-        let symbol = activityData.symbol;
-        let name = activityData.name;
+        let symbol = escapeMarkdown(activityData.symbol);
+        let name = escapeMarkdown(activityData.name);
 
         if (ownerData.length) {
 

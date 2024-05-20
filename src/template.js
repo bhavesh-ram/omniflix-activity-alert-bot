@@ -1,3 +1,9 @@
+const escapeMarkdown = (text) => {
+  const specialChars = ['*', '_', '[', ']', '(', ')', '~', '`', '>', '#', '+', '|', '{', '}', '.', '!'];
+  const escapedText = text.split('').map(char => specialChars.includes(char) ? `\\${char}` : char).join('');
+  return escapedText;
+}
+
 let StartMsg = `Hello {USER_NAME},\nExplore NFTs & Interactive content on #OmniFlix. Enter /help for a list of commands.`
 
 let HelpMsg =
@@ -241,4 +247,6 @@ module.exports = {
 
   NewIVPublishedHelperMsg,
   NewChannelsHelperMsg,
+
+  escapeMarkdown
 }
