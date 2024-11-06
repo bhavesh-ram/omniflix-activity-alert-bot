@@ -20,7 +20,8 @@ const {
 const { 
     updateDenomHelper, 
     transferDenomHelper, 
-    createDenomHelper 
+    createDenomHelper, 
+    verifyCollection
 } = require("../helpers/denom.helper");
 const { 
     bulkAuction, 
@@ -92,7 +93,7 @@ const mainScheduler = () => {
                     const collections = body.result.list
                     verifiedCollection.splice(0,)
                     collections.forEach(collection => {
-                        verifiedCollection.push(collection._id)
+                        verifiedCollection.push(collection.id)
                     })
                     next(null, verifiedCollection)
                 } else {
@@ -165,64 +166,7 @@ const mainScheduler = () => {
                         cb(null)
                     } else {
                         if (activity.type == "MsgListNFT" || activity.type == "MsgCreateAuction") {
-                            const denom = typeof activity.denom_id === 'object' ? activity.denom_id._id : activity.denom_id;
-                            if (verifiedCollection.includes(denom)) {
-                                if (activity.type == "MsgCreateAuction") {
-                                    createAuctionHelper(activity)
-                                } else if (activity.type == "MsgListNFT") {
-                                    listingHelper(activity)
-                                } else if (activity.type == "MsgCancelAuction") {
-                                    cancelAuctionHelper(activity)
-                                } else if (activity.type == "RemoveAuction") {
-                                    removeAuctionHelper(activity)
-                                } else if (activity.type == "ProcessBid") {
-                                    processBidAuctionHelper(activity)
-                                } else if (activity.type == "MsgPlaceBid") {
-                                    placeBidAuctionHelper(activity)
-                                } else if (activity.type == "MsgTransferONFT") {
-                                    transferNFTHelper(activity)
-                                } else if (activity.type == "MsgBuyNFT") {
-                                    buyNFTHelper(activity)
-                                } else if (activity.type == "MsgDeListNFT") {
-                                    deListingHelper(activity)
-                                } else if (activity.type == "MsgBurnONFT") {
-                                    burnNFTHelper(activity)
-                                } else if (activity.type == "MsgCreateDenom") {
-                                    createDenomHelper(activity)
-                                } else if (activity.type == "MsgUpdateDenom") {
-                                    updateDenomHelper(activity)
-                                } else if (activity.type == "MsgTransferDenom") {
-                                    transferDenomHelper(activity)
-                                } else if (activity.type == "MsgMintONFT") {
-                                    mintONFTHelper(activity)
-                                } else if (activity.type == "MsgCreateCampaign") {
-                                    MsgCreateCampaignHelper(activity)
-                                } else if (activity.type == "MsgCancelCampaign") {
-                                    MsgCancelCampaignHelper(activity)
-                                } else if (activity.type == "MsgDepositCampaign") {
-                                    MsgDepositCampaignHelper(activity)
-                                } else if (activity.type == "MsgClaim") {
-                                    MsgClaimCampaignHelper(activity)
-                                } else if (activity.type == "EndCampaign") {
-                                    endCampaignHelper(activity)
-                                } else if (activity.type == "TransferNft") {
-                                    campaignTransferNFTHelper(activity)
-                                } else if (activity.type == "STREAM_PAYMENT_TYPE_CONTINUOUS") {
-                                    MsgStreamSendHelper(activity)
-                                } else if (activity.type == "STREAM_PAYMENT_TYPE_DELAYED") {
-                                    MsgStreamSendHelper(activity)
-                                } else if (activity.type == "MsgStopStream") {
-                                    MsgStopStreamHelper(activity)
-                                } else if (activity.type == "CLAIM") {
-                                    MsgClaimStreamedAmountHelper(activity)
-                                } else if (activity.type == "BurnNft") {
-                                    burnNFTClaimHelper(activity)
-                                } else if (activity.type == "StreamCreated") {
-                                    MsgStreamCreatedHelper(activity)
-                                }
-                            } else {
-                                logger.error("Collection Not Verified")
-                            }
+                            verifiedCollectionScheduler(verifiedCollection, activity);
                         } else {
                             if (activity.type == "MsgCreateAuction") {
                                 createAuctionHelper(activity)
@@ -309,8 +253,7 @@ const mainScheduler = () => {
                             } else if (activity.type == "MsgRemoveMinterContractDrop") {
                                 removeMinterContractDropHelper(activity)
                             } else {
-                                console.log('Collection Not present', activity.type)
-                                // logger.error("No Collection Present")
+                                logger.error("No Collection Present")
                             }
                         }
                         cb(null)
@@ -322,6 +265,90 @@ const mainScheduler = () => {
                 }
             })
         },
+    ], (error) => {
+        if (error) {
+            logger.error(error);
+        }
+    })
+}
+
+const verifiedCollectionScheduler = (verifiedCollection, activity) => {
+    const denom = typeof activity.denom_id === 'object' ? activity.denom_id.id : activity.denom_id;
+    
+    async.waterfall([
+        (next) => {
+            if (verifiedCollection.includes(denom)) {
+                next(null, activity);
+            } else {
+                verifyCollection(denom, (error, verified) => {
+                    if (error) {
+                        logger.error('Error verifying collection', error);
+                        next(error);
+                    } else if (verified) {
+                        next(null, activity);
+                    } else {
+                        console.log('Collection Not verified', denom);
+                        logger.error('Collection Not verified', denom);
+                    }
+                })
+            }
+        }, (activity, next) => {
+            if (activity.type == "MsgCreateAuction") {
+                createAuctionHelper(activity)
+            } else if (activity.type == "MsgListNFT") {
+                listingHelper(activity)
+            } else if (activity.type == "MsgCancelAuction") {
+                cancelAuctionHelper(activity)
+            } else if (activity.type == "RemoveAuction") {
+                removeAuctionHelper(activity)
+            } else if (activity.type == "ProcessBid") {
+                processBidAuctionHelper(activity)
+            } else if (activity.type == "MsgPlaceBid") {
+                placeBidAuctionHelper(activity)
+            } else if (activity.type == "MsgTransferONFT") {
+                transferNFTHelper(activity)
+            } else if (activity.type == "MsgBuyNFT") {
+                buyNFTHelper(activity)
+            } else if (activity.type == "MsgDeListNFT") {
+                deListingHelper(activity)
+            } else if (activity.type == "MsgBurnONFT") {
+                burnNFTHelper(activity)
+            } else if (activity.type == "MsgCreateDenom") {
+                createDenomHelper(activity)
+            } else if (activity.type == "MsgUpdateDenom") {
+                updateDenomHelper(activity)
+            } else if (activity.type == "MsgTransferDenom") {
+                transferDenomHelper(activity)
+            } else if (activity.type == "MsgMintONFT") {
+                mintONFTHelper(activity)
+            } else if (activity.type == "MsgCreateCampaign") {
+                MsgCreateCampaignHelper(activity)
+            } else if (activity.type == "MsgCancelCampaign") {
+                MsgCancelCampaignHelper(activity)
+            } else if (activity.type == "MsgDepositCampaign") {
+                MsgDepositCampaignHelper(activity)
+            } else if (activity.type == "MsgClaim") {
+                MsgClaimCampaignHelper(activity)
+            } else if (activity.type == "EndCampaign") {
+                endCampaignHelper(activity)
+            } else if (activity.type == "TransferNft") {
+                campaignTransferNFTHelper(activity)
+            } else if (activity.type == "STREAM_PAYMENT_TYPE_CONTINUOUS") {
+                MsgStreamSendHelper(activity)
+            } else if (activity.type == "STREAM_PAYMENT_TYPE_DELAYED") {
+                MsgStreamSendHelper(activity)
+            } else if (activity.type == "MsgStopStream") {
+                MsgStopStreamHelper(activity)
+            } else if (activity.type == "CLAIM") {
+                MsgClaimStreamedAmountHelper(activity)
+            } else if (activity.type == "BurnNft") {
+                burnNFTClaimHelper(activity)
+            } else if (activity.type == "StreamCreated") {
+                MsgStreamCreatedHelper(activity)
+            } else {
+                next('Activity Not found');
+            }
+        }
     ], (error) => {
         if (error) {
             logger.error(error);

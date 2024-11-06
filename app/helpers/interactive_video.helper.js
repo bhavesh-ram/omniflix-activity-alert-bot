@@ -30,7 +30,8 @@ const newIVPublishedHelper = (interactiveVideo, cb) => {
                     });
                     next(null);
                 } else {
-                    next('No User subscribed');
+                    logger.error('No User subscribed');
+                    next(null);
                 }
             });
         }, (next) => {
@@ -55,10 +56,9 @@ const newIVPublishedHelper = (interactiveVideo, cb) => {
         }, (msg, options, next) => {
             botHelper.sendMessages(user_chatId, msg, options, (error) => {
                 if (error) {
-                    next(error);
-                } else {
-                    next(null);
-                }
+                    logger.error(error);
+                } 
+                next(null);
             });
         }, (next) => {
             interactiveVideoDBO.findOneAndUpdate({

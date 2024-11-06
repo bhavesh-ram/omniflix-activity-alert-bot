@@ -1,9 +1,11 @@
 const async = require('async');
+const request = require('request');
 const userDBO = require('../dbos/user.dbo');
 const activityDBO = require('../dbos/activity.dbo');
 const botHelper = require('./bot.helper');
 const templateUtil = require('../utils/template.util');
 const logger = require('../../logger');
+const config = require('../../config');
 
 String.prototype.fmt = function (hash) {
     var string = this, key; 
@@ -289,10 +291,38 @@ const updateDenomHelper = (activity) => {
     });
 };
 
+const verifyCollection = (denomId, cb) => {
+    const url = `${config.omniflix.datalayerUrl}/collections/${denomId}`
+    const options = { json: true };
+
+    async.waterfall([
+        (next) => {
+            request(url, options, (error, res) => {
+                console.log('res', res.statusCode);
+                if (error) {
+                    next(error);
+                } else if (res && res.statusCode == 200) {
+                    next(null, true);
+                } else {
+                    next(null, false);
+                }
+            });
+        }
+    ], (error, result) => {
+        if (error) {
+            logger.error(error);
+            cb(error, false);
+        } else {
+            cb(null, result);
+        }
+    });
+}
+
 module.exports = {
     createDenomHelper,
     transferDenomHelper,
-    updateDenomHelper
+    updateDenomHelper,
+    verifyCollection
 };
 
 

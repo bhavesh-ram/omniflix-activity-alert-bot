@@ -3,11 +3,11 @@ dotenv.config();
 
 module.exports = {
     omniflixMarketplaceBot: {
-        address: process.env.OMNIFLIX_MARKETPLACE_BOT_ADDRESS || 'localhost',
-        port: process.env.OMNIFLIX_MARKETPLACE_BOT_PORT || 27017,
-        name: process.env.OMNIFLIX_MARKETPLACE_BOT_NAME || 'marketplace_bot',
-        username: process.env.OMNIFLIX_MARKETPLACE_BOT_USERNAME || '',
-        password: process.env.OMNIFLIX_MARKETPLACE_BOT_PASSWORD || '',
+        address: process.env.OMNIFLIX_MARKETPLACE_BOT_DB_ADDRESS || 'localhost',
+        port: process.env.OMNIFLIX_MARKETPLACE_BOT_DB_PORT || 27017,
+        name: process.env.OMNIFLIX_MARKETPLACE_BOT_DB_NAME || 'marketplace_bot',
+        username: process.env.OMNIFLIX_MARKETPLACE_BOT_DB_USERNAME || '',
+        password: process.env.OMNIFLIX_MARKETPLACE_BOT_DB_PASSWORD || '',
     },
     bot: {
         token: process.env.BOT_TOKEN,

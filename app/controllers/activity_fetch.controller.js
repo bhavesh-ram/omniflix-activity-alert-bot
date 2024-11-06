@@ -20,7 +20,9 @@ const activityFetching = () => {
                 } else if (result && result.length > 0) {
                     next(null, result[0].created_at);
                 } else {
-                    next(null, new Date(0));
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    next(null, yesterday);
                 }
             });
         }, (result, next) => {

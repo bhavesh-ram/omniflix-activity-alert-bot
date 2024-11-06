@@ -47,7 +47,8 @@ const newChannelsHelper = async (channel) => {
                     })
                     next(null);
                 } else {
-                    next('No Users Subscribed!');
+                    logger.error('No Users Subscribed!');
+                    next(null);
                 }
             })
         }, (next) => {
@@ -72,10 +73,9 @@ const newChannelsHelper = async (channel) => {
         }, (msg, options, next) => {
             botHelper.sendMessages(user_chatId, msg, options, (error) => {
                 if (error) {
-                    next(error);
-                } else {
-                    next(null);
-                }
+                    logger.error(error);
+                } 
+                next(null);
             })
         }, (next) => {
             channelDBO.findOneAndUpdate({
